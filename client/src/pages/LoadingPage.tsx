@@ -1,5 +1,5 @@
+import logoUrl from "@assets/IMG_8962_1772449348074.webp";
 import { motion } from "framer-motion";
-import { Shield } from "lucide-react";
 
 export default function LoadingPage() {
   return (
@@ -12,12 +12,12 @@ export default function LoadingPage() {
       <motion.div 
         animate={{ scale: [1, 1.1, 1] }}
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-        className="w-24 h-24 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-md shadow-2xl mb-8"
+        className="w-24 h-24 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-md shadow-2xl mb-8 overflow-hidden"
       >
-        <Shield className="w-12 h-12 text-white" />
+        <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
       </motion.div>
       
-      <h2 className="font-display text-3xl font-bold mb-2">NOVO BANCO</h2>
+      <h2 className="font-display text-3xl font-bold mb-2 tracking-tight">NOVO BANCO</h2>
       
       <div className="flex items-center gap-3">
         <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

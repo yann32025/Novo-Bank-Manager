@@ -1,3 +1,4 @@
+import logoUrl from "@assets/IMG_8962_1772449348074.webp";
 import { motion } from "framer-motion";
 import { Nfc } from "lucide-react";
 
@@ -24,8 +25,12 @@ export function VisaCard({ accountNumber, accountHolder }: VisaCardProps) {
 
       {/* Header */}
       <div className="flex justify-between items-start relative z-10">
-        <Nfc className="text-white/80 w-8 h-8 rotate-90" />
+        <img src={logoUrl} alt="Logo" className="w-12 h-12 rounded-lg brightness-0 invert opacity-90" />
         <span className="text-white/90 font-display font-bold text-xl tracking-wider">VISA</span>
+      </div>
+
+      <div className="flex justify-start relative z-10 -mt-2">
+        <Nfc className="text-white/40 w-8 h-8 rotate-90" />
       </div>
 
       {/* Number */}
@@ -44,6 +49,7 @@ export function VisaCard({ accountNumber, accountHolder }: VisaCardProps) {
             {accountHolder || "VIEIRA MANOEL"}
           </span>
         </div>
+        <div className="w-12 h-8 bg-white/20 rounded-md backdrop-blur-sm" />
       </div>
     </motion.div>
   );

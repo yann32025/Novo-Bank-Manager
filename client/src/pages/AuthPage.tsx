@@ -1,7 +1,8 @@
+import logoUrl from "@assets/IMG_8962_1772449348074.webp";
+import bgUrl from "@assets/59dfb3fc-cf2e-4f27-a14f-815070a6fffb_1772449777977.jpeg";
 import { useState } from "react";
 import { useLogin } from "@/hooks/use-auth";
 import { motion } from "framer-motion";
-import { Shield } from "lucide-react";
 
 export default function AuthPage() {
   const [username, setUsername] = useState("Manoel11");
@@ -17,10 +18,10 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen relative flex items-center justify-center overflow-hidden bg-background">
-      {/* Beautiful background elements */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px]" />
+        <img src={bgUrl} alt="Background" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]" />
       </div>
 
       {/* Login Box */}
@@ -28,26 +29,24 @@ export default function AuthPage() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-sm px-4"
+        className="relative z-10 w-full max-w-[320px] px-4"
       >
-        <div className="glass-panel rounded-3xl p-8 flex flex-col items-center">
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 flex flex-col items-center shadow-2xl">
           
-          <div className="mb-8 flex flex-col items-center">
-            <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 mb-4">
-              <Shield className="text-white w-8 h-8" />
-            </div>
-            <h1 className="font-display text-2xl font-bold text-foreground tracking-tight">NOVO BANCO</h1>
-            <p className="text-muted-foreground text-sm mt-1">Espace Client Sécurisé</p>
+          <div className="mb-6 flex flex-col items-center">
+            <img src={logoUrl} alt="NOVO BANCO" className="w-24 h-auto mb-4 rounded-xl shadow-lg" />
+            <h1 className="font-display text-xl font-bold text-white tracking-tight">NOVO BANCO</h1>
+            <p className="text-white/70 text-xs mt-1">Espace Client Sécurisé</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="w-full space-y-5">
+          <form onSubmit={handleSubmit} className="w-full space-y-4">
             <div>
               <input
                 type="text"
                 placeholder="Identifiant"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-5 py-3.5 rounded-xl bg-white/40 backdrop-blur-sm border-2 border-white/50 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:text-muted-foreground/70 font-medium"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:text-white/50 text-white font-medium text-sm"
               />
             </div>
             
@@ -57,17 +56,17 @@ export default function AuthPage() {
                 placeholder="Mot de passe"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-5 py-3.5 rounded-xl bg-white/40 backdrop-blur-sm border-2 border-white/50 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:text-muted-foreground/70 font-medium font-mono tracking-widest"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:text-white/50 text-white font-medium font-mono tracking-widest text-sm"
               />
             </div>
 
             <div className="flex items-center justify-between px-1">
               <label className="flex items-center gap-2 cursor-pointer group">
-                <div className={`w-10 h-6 rounded-full transition-colors relative flex items-center px-1 ${rememberMe ? 'bg-primary' : 'bg-white/50 border border-white'}`}>
+                <div className={`w-8 h-5 rounded-full transition-colors relative flex items-center px-1 ${rememberMe ? 'bg-primary' : 'bg-white/30 border border-white/20'}`}>
                   <motion.div 
                     layout
-                    className="w-4 h-4 bg-white rounded-full shadow-sm"
-                    animate={{ x: rememberMe ? 16 : 0 }}
+                    className="w-3 h-3 bg-white rounded-full shadow-sm"
+                    animate={{ x: rememberMe ? 12 : 0 }}
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 </div>
@@ -77,12 +76,12 @@ export default function AuthPage() {
                   checked={rememberMe} 
                   onChange={() => setRememberMe(!rememberMe)}
                 />
-                <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors">Se souvenir de moi</span>
+                <span className="text-xs font-medium text-white/90 group-hover:text-white transition-colors">Se souvenir de moi</span>
               </label>
             </div>
 
             {login.isError && (
-              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium text-center">
+              <div className="p-2 rounded-lg bg-destructive/20 border border-destructive/30 text-white text-xs font-medium text-center">
                 {login.error.message}
               </div>
             )}
@@ -90,20 +89,20 @@ export default function AuthPage() {
             <button
               type="submit"
               disabled={login.isPending || !username || !password}
-              className="w-full py-4 mt-2 rounded-xl font-bold text-white bg-primary shadow-[0_8px_20px_-4px_rgba(34,197,94,0.4)] hover:shadow-[0_12px_24px_-4px_rgba(34,197,94,0.5)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 transition-all duration-200"
+              className="w-full py-3 mt-2 rounded-xl font-bold text-white bg-primary shadow-lg hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 transition-all duration-200 text-sm"
             >
               {login.isPending ? "Connexion..." : "Se connecter"}
             </button>
           </form>
 
-          <div className="mt-8 w-full flex flex-col gap-3 text-center text-sm font-medium text-primary hover:text-primary/80">
-            <button className="transition-colors hover:underline underline-offset-4">Identifiant oublié</button>
-            <button className="transition-colors hover:underline underline-offset-4">Mot de passe oublié</button>
+          <div className="mt-6 w-full flex flex-col gap-2 text-center text-xs font-medium text-white/80">
+            <button className="hover:text-white transition-colors">Identifiant oublié</button>
+            <button className="hover:text-white transition-colors">Mot de passe oublié</button>
           </div>
 
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent my-6" />
+          <div className="w-full h-px bg-white/10 my-4" />
 
-          <button className="text-foreground text-sm font-bold hover:text-primary transition-colors">
+          <button className="text-white text-xs font-bold hover:text-primary transition-colors">
             Ouvrir un compte
           </button>
         </div>
