@@ -13,15 +13,20 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
 
-  // Minimal session setup for fake auth
+  // Professional session setup with 30-minute timeout
   app.use(session({
-    cookie: { maxAge: 86400000 },
+    cookie: { 
+      maxAge: 30 * 60 * 1000, // 30 minutes in milliseconds
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax"
+    },
     store: new SessionStore({
       checkPeriod: 86400000 
     }),
     resave: false,
     saveUninitialized: false,
-    secret: process.env.SESSION_SECRET || 'keyboard cat'
+    secret: process.env.SESSION_SECRET || 'novo-banco-secure-key-2026'
   }));
 
   // Seed db with initial user if empty
