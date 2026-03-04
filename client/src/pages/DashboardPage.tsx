@@ -63,18 +63,20 @@ export default function DashboardPage() {
 
             {/* Main Balance Card */}
             <div className="bg-card rounded-3xl p-6 shadow-xl shadow-black/5 border border-border/50 relative overflow-hidden">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h2 className="text-muted-foreground font-medium mb-1 uppercase tracking-wider text-[10px]">Épargne & Placements</h2>
-                  <p className="font-display text-4xl font-bold text-foreground">
-                    {account?.balance ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(Number(account.balance)) : "1 800 000,00 €"}
-                  </p>
-                </div>
-                {account?.isBlocked && (
-                  <div className="flex items-center gap-1.5 px-3 py-1 bg-destructive/10 text-destructive rounded-full text-xs font-bold border border-destructive/20">
-                    <Lock className="w-3 h-3" /> Bloqué
+              <div className="flex flex-col mb-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h2 className="text-muted-foreground font-medium mb-1 uppercase tracking-wider text-[10px]">Épargne & Placements</h2>
+                    <p className="font-display text-4xl font-bold text-foreground">
+                      {account?.balance ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(Number(account.balance)) : "1 800 000,00 €"}
+                    </p>
                   </div>
-                )}
+                  {account?.isBlocked && (
+                    <div className="flex items-center gap-1.5 px-4 py-2 bg-destructive text-white rounded-xl text-xs font-black border-2 border-destructive/20 shadow-lg shadow-destructive/40 animate-pulse">
+                      <Lock className="w-3.5 h-3.5" /> BLOQUÉ
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

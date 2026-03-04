@@ -20,12 +20,18 @@ export function VisaCard({ accountNumber, accountHolder }: VisaCardProps) {
       }}
     >
       {/* Decorative background elements */}
+      <div className="absolute inset-0 opacity-10 mix-blend-overlay">
+        <img src={logoUrl} alt="" className="w-full h-full object-cover scale-150 rotate-12" />
+      </div>
       <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full blur-2xl translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
       {/* Header */}
       <div className="flex justify-between items-start relative z-10">
-        <img src={logoUrl} alt="Logo" className="w-12 h-12 rounded-lg brightness-0 invert opacity-90" />
+        <div className="flex flex-col items-center gap-1">
+          <img src={logoUrl} alt="Logo" className="w-10 h-10 rounded-lg shadow-xl border border-white/20" />
+          <span className="text-[6px] text-white/60 font-black tracking-tighter uppercase">novobanco</span>
+        </div>
         <span className="text-white/90 font-display font-bold text-xl tracking-wider">VISA</span>
       </div>
 
