@@ -39,7 +39,7 @@ export async function registerRoutes(
           username: "Manoel11",
           password: "1515", // In a real app we'd hash this
           fullName: "Vieira Manoel",
-          profilePicture: "/assets/7bc5850e-8a00-4baa-ac43-758a5b286b9a_1772583390146.jpeg"
+          profilePicture: "/assets/profile.jpeg"
         }).returning();
 
         await db.insert(accounts).values({

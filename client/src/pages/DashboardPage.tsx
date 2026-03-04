@@ -61,8 +61,17 @@ export default function DashboardPage() {
               </motion.div>
             </div>
 
-            {/* Main Balance Card */}
+            {/* Section 2: Epargne & Placements (Balance) */}
             <div className="bg-card rounded-3xl p-6 shadow-xl shadow-black/5 border border-border/50 relative overflow-hidden">
+              {account?.isBlocked && (
+                <div className="mb-4 p-4 bg-destructive/10 border-l-4 border-destructive rounded-r-xl flex items-start gap-3">
+                  <Info className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
+                  <p className="text-sm font-bold text-destructive leading-tight">
+                    Certaines fonctionnalités de votre compte sont désactivées. <br/>
+                    <span className="font-medium opacity-80 text-xs">Motif : Procédure successorale.</span>
+                  </p>
+                </div>
+              )}
               <div className="flex flex-col mb-4">
                 <div className="flex justify-between items-start">
                   <div>
@@ -72,8 +81,8 @@ export default function DashboardPage() {
                     </p>
                   </div>
                   {account?.isBlocked && (
-                    <div className="flex items-center gap-1.5 px-4 py-2 bg-destructive text-white rounded-xl text-xs font-black border-2 border-destructive/20 shadow-lg shadow-destructive/40 animate-pulse">
-                      <Lock className="w-3.5 h-3.5" /> BLOQUÉ
+                    <div className="flex items-center gap-1.5 px-4 py-2 bg-destructive text-white rounded-xl text-[10px] font-black border-2 border-white/20 shadow-lg shadow-destructive/40 animate-pulse whitespace-nowrap">
+                      <Lock className="w-3 h-3" /> COMPTE BLOQUÉ
                     </div>
                   )}
                 </div>
