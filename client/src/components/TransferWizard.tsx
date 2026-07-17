@@ -1,149 +1,153 @@
-import bgUrl from "@assets/59dfb3fc-cf2e-4f27-a14f-815070a6fffb_1772449777977.jpeg";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, CheckCircle2, XCircle, ChevronLeft, ShieldCheck, CreditCard } from "lucide-react";
+import { ArrowLeftRight, CheckCircle2, XCircle, ChevronLeft, Lock, Zap, ArrowRight, Users } from "lucide-react";
 import { useCreateTransfer } from "@/hooks/use-banking";
 
-type Step = 1 | 2 | 3 | "error" | "success";
+type Mode = "standard" | "instant";
+type Step = "form" | "confirm" | "success" | "error";
 
 export function TransferWizard() {
-  const [step, setStep] = useState<Step>(1);
-  const [formData, setFormData] = useState({ iban: "", bic: "", amount: "" });
+  const [mode, setMode] = useState<Mode>("standard");
+  const [step, setStep] = useState<Step>("form");
+  const [form, setForm] = useState({ beneficiary: "", iban: "", bic: "", amount: "", motif: "" });
   const [errorMsg, setErrorMsg] = useState("");
-  
   const createTransfer = useCreateTransfer();
 
-  const handleNext = () => {
-    if (step === 1 && formData.iban && formData.bic) setStep(2);
-    else if (step === 2 && formData.amount) setStep(3);
+  const update = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm(prev => ({ ...prev, [k]: k === "iban" || k === "bic" ? e.target.value.toUpperCase() : e.target.value }));
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStep("confirm");
   };
 
   const handleConfirm = () => {
-    createTransfer.mutate(formData, {
+    createTransfer.mutate({ iban: form.iban, bic: form.bic, amount: form.amount }, {
       onSuccess: () => setStep("success"),
-      onError: (err) => {
-        setErrorMsg(err.message);
-        setStep("error");
-      }
+      onError: (err) => { setErrorMsg(err.message); setStep("error"); }
     });
   };
 
-  const reset = () => {
-    setStep(1);
-    setFormData({ iban: "", bic: "", amount: "" });
-    setErrorMsg("");
-  };
+  const reset = () => { setStep("form"); setForm({ beneficiary: "", iban: "", bic: "", amount: "", motif: "" }); setErrorMsg(""); };
 
-  const inputClasses = "w-full px-4 py-3 rounded-xl bg-white/80 backdrop-blur-sm border-2 border-white/50 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-mono text-sm shadow-inner";
+  const fieldClass = "w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/20 focus:border-white/50 focus:bg-white/15 outline-none text-white placeholder:text-white/40 text-sm font-medium transition-all";
+  const labelClass = "block text-[10px] font-black text-white/60 uppercase tracking-widest mb-1.5";
 
   return (
-    <div className="relative bg-card rounded-2xl overflow-hidden shadow-2xl border border-border/30 min-h-[450px] flex flex-col">
-      {/* Background with overlay */}
-      <div className="absolute inset-0 z-0">
-        <img src={bgUrl} alt="Background" className="w-full h-full object-cover opacity-15 grayscale" />
-        <div className="absolute inset-0 bg-gradient-to-b from-card/80 via-card/90 to-card" />
+    <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ background: "linear-gradient(160deg, #1a5c3a 0%, #0f3d27 100%)" }}>
+      {/* Header */}
+      <div className="px-5 pt-5 pb-4">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center">
+            <ArrowLeftRight className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h3 className="font-black text-white text-base">Effectuer un virement</h3>
+            <p className="text-white/50 text-xs">Sécurisé · Rapide · Fiable</p>
+          </div>
+        </div>
+
+        {/* Blocked warning */}
+        <div className="flex items-center gap-2.5 bg-amber-900/60 border border-amber-700/50 rounded-xl px-4 py-3 mb-5">
+          <Lock className="w-4 h-4 text-amber-400 shrink-0" />
+          <p className="text-amber-200 text-xs font-semibold leading-tight">
+            Compte bloqué — virement enregistré et traité après déblocage.
+          </p>
+        </div>
+
+        {/* Mode toggle */}
+        <div className="flex bg-white/10 rounded-xl p-1 gap-1">
+          <button onClick={() => setMode("standard")} className={`flex-1 py-2.5 rounded-lg text-xs font-black transition-all ${mode === "standard" ? "bg-white text-primary shadow-sm" : "text-white/70"}`}>
+            Standard
+          </button>
+          <button onClick={() => setMode("instant")} className={`flex-1 py-2.5 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 ${mode === "instant" ? "bg-white text-primary shadow-sm" : "text-white/70"}`}>
+            <Zap className="w-3.5 h-3.5" /> Instantané
+          </button>
+        </div>
       </div>
 
-      <div className="relative z-10 p-6 flex-1 flex flex-col">
-        {typeof step === "number" && (
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-primary" />
-              <h3 className="font-display font-bold text-lg">Virement sécurisé</h3>
-            </div>
-            <div className="flex gap-1.5">
-              {[1, 2, 3].map((s) => (
-                <div key={s} className={`h-1.5 w-6 rounded-full transition-all duration-300 ${s <= step ? 'bg-primary scale-x-110' : 'bg-primary/20'}`} />
-              ))}
-            </div>
-          </div>
-        )}
-
+      {/* Content */}
+      <div className="px-5 pb-6">
         <AnimatePresence mode="wait">
-          {step === 1 && (
-            <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 flex flex-col">
-              <div className="space-y-4 flex-1">
-                <div>
-                  <label className="block text-xs font-bold text-muted-foreground mb-1.5 uppercase tracking-wider">IBAN du bénéficiaire</label>
-                  <input type="text" value={formData.iban} onChange={(e) => setFormData({...formData, iban: e.target.value.toUpperCase()})} placeholder="FR76 0000 0000 0000 0000 0000 000" className={inputClasses} />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-muted-foreground mb-1.5 uppercase tracking-wider">Code BIC / SWIFT</label>
-                  <input type="text" value={formData.bic} onChange={(e) => setFormData({...formData, bic: e.target.value.toUpperCase()})} placeholder="XXXXXXXX" className={inputClasses} />
-                </div>
-              </div>
-              <button onClick={handleNext} disabled={!formData.iban || !formData.bic} className="mt-6 w-full py-4 rounded-xl font-bold bg-primary text-white shadow-lg hover:shadow-primary/40 hover:-translate-y-0.5 disabled:opacity-50 transition-all flex items-center justify-center gap-2">
-                Étape suivante <ArrowRight className="w-5 h-5" />
-              </button>
-            </motion.div>
-          )}
-
-          {step === 2 && (
-            <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 flex flex-col">
-              <button onClick={() => setStep(1)} className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm font-bold mb-4 w-max transition-colors"><ChevronLeft className="w-4 h-4" /> Retour</button>
-              <div className="flex-1 flex flex-col justify-center">
-                <label className="block text-xs font-bold text-muted-foreground mb-2 text-center uppercase tracking-wider">Montant à transférer</label>
-                <div className="relative max-w-xs mx-auto w-full">
-                  <input type="number" value={formData.amount} onChange={(e) => setFormData({...formData, amount: e.target.value})} placeholder="0.00" className="w-full bg-transparent text-center font-display text-5xl font-bold text-foreground border-b-2 border-primary/30 focus:border-primary outline-none py-2 pb-4 no-arrows transition-colors" />
-                  <span className="absolute right-0 bottom-6 text-2xl font-bold text-primary">€</span>
-                </div>
-              </div>
-              <button onClick={handleNext} disabled={!formData.amount || Number(formData.amount) <= 0} className="mt-6 w-full py-4 rounded-xl font-bold bg-primary text-white shadow-lg hover:shadow-primary/40 hover:-translate-y-0.5 disabled:opacity-50 transition-all flex items-center justify-center gap-2">
-                Récapitulatif <ArrowRight className="w-5 h-5" />
-              </button>
-            </motion.div>
-          )}
-
-          {step === 3 && (
-            <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 flex flex-col">
-              <button onClick={() => setStep(2)} className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm font-bold mb-4 w-max transition-colors"><ChevronLeft className="w-4 h-4" /> Modifier</button>
-              <div className="flex-1 space-y-4">
-                <div className="p-5 rounded-2xl bg-white/40 backdrop-blur-md border border-white/60 space-y-4 shadow-sm">
-                  <div className="flex justify-between items-center pb-3 border-b border-white/50">
-                    <span className="text-muted-foreground text-xs font-bold uppercase tracking-wider">Montant</span>
-                    <span className="font-display font-bold text-2xl text-primary">{formData.amount} €</span>
-                  </div>
-                  <div className="space-y-3">
-                    <div>
-                      <span className="block text-muted-foreground text-[10px] font-bold uppercase tracking-widest mb-1">Destinataire (IBAN)</span>
-                      <span className="font-mono text-xs block break-all bg-white/50 p-2 rounded-lg border border-white/50">{formData.iban}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">BIC</span>
-                      <span className="font-mono text-xs font-bold">{formData.bic}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <button onClick={handleConfirm} disabled={createTransfer.isPending} className="mt-6 w-full py-4 rounded-xl font-bold bg-primary text-white shadow-lg hover:shadow-primary/40 hover:-translate-y-0.5 disabled:opacity-70 transition-all flex items-center justify-center gap-2">
-                <CreditCard className="w-5 h-5" /> {createTransfer.isPending ? "Validation..." : "Confirmer le virement"}
-              </button>
-            </motion.div>
-          )}
-
-          {step === "error" && (
-            <motion.div key="error" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex-1 flex flex-col items-center justify-center text-center space-y-6 py-8">
-              <motion.div initial={{ scale: 0 }} animate={{ scale: 1, rotate: [0, -10, 10, 0] }} transition={{ type: "spring", stiffness: 200, delay: 0.1 }}>
-                <XCircle className="w-24 h-24 text-destructive drop-shadow-xl" />
-              </motion.div>
+          {step === "form" && (
+            <motion.form key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <h3 className="text-2xl font-display font-bold text-destructive mb-2 uppercase tracking-tight">Virement refusé</h3>
-                <p className="text-muted-foreground font-medium">{errorMsg}</p>
+                <label className={labelClass}>Bénéficiaire *</label>
+                <div className="relative">
+                  <input type="text" value={form.beneficiary} onChange={update("beneficiary")} placeholder="Nom du bénéficiaire" required className={fieldClass + " pr-12"} />
+                  <Users className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                </div>
               </div>
-              <button onClick={reset} className="px-8 py-3 rounded-xl font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all">Réessayer</button>
+              <div>
+                <label className={labelClass}>IBAN *</label>
+                <input type="text" value={form.iban} onChange={update("iban")} placeholder="FR76 XXXX XXXX XXXX XXXX XXXX XXX" required className={fieldClass + " font-mono tracking-wider"} />
+              </div>
+              <div>
+                <label className={labelClass}>BIC / SWIFT *</label>
+                <input type="text" value={form.bic} onChange={update("bic")} placeholder="BNPAFRPPXXX" required className={fieldClass + " font-mono tracking-wider"} />
+              </div>
+              <div>
+                <label className={labelClass}>Montant (€) *</label>
+                <div className="relative">
+                  <input type="number" value={form.amount} onChange={update("amount")} placeholder="0,00" required min="0.01" step="0.01" className={fieldClass + " pr-10"} />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 font-bold text-sm">€</span>
+                </div>
+              </div>
+              <div>
+                <label className={labelClass}>Motif (optionnel)</label>
+                <input type="text" value={form.motif} onChange={update("motif")} placeholder="ex : Loyer, Remboursement..." className={fieldClass} />
+              </div>
+              <button type="submit" disabled={!form.beneficiary || !form.iban || !form.bic || !form.amount} className="w-full py-4 mt-2 rounded-xl font-black text-primary bg-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 text-sm">
+                Vérifier le virement <ArrowRight className="w-4 h-4" />
+              </button>
+            </motion.form>
+          )}
+
+          {step === "confirm" && (
+            <motion.div key="confirm" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
+              <button onClick={() => setStep("form")} className="flex items-center gap-1.5 text-white/60 hover:text-white text-xs font-bold transition-colors">
+                <ChevronLeft className="w-4 h-4" /> Modifier
+              </button>
+              <div className="bg-white/10 rounded-2xl border border-white/15 p-5 space-y-3">
+                <h4 className="text-white font-black text-base mb-4">Récapitulatif</h4>
+                {[
+                  { label: "Bénéficiaire", val: form.beneficiary },
+                  { label: "IBAN", val: form.iban, mono: true },
+                  { label: "BIC", val: form.bic, mono: true },
+                  { label: "Montant", val: `${form.amount} €`, big: true },
+                  ...(form.motif ? [{ label: "Motif", val: form.motif }] : []),
+                ].map((row, i) => (
+                  <div key={i} className="flex justify-between items-start gap-4 py-2.5 border-b border-white/10 last:border-0">
+                    <span className="text-white/50 text-xs font-bold uppercase tracking-wider shrink-0">{row.label}</span>
+                    <span className={`text-right break-all ${row.mono ? "font-mono text-xs text-white/90" : row.big ? "font-black text-white text-lg" : "text-sm text-white/90 font-semibold"}`}>{row.val}</span>
+                  </div>
+                ))}
+              </div>
+              <button onClick={handleConfirm} disabled={createTransfer.isPending} className="w-full py-4 rounded-xl font-black text-primary bg-white shadow-lg hover:-translate-y-0.5 disabled:opacity-60 transition-all text-sm">
+                {createTransfer.isPending ? "Enregistrement..." : "Confirmer le virement"}
+              </button>
             </motion.div>
           )}
 
           {step === "success" && (
-            <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex-1 flex flex-col items-center justify-center text-center space-y-6 py-8">
-              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.1 }}>
-                <CheckCircle2 className="w-24 h-24 text-primary drop-shadow-xl" />
-              </motion.div>
+            <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center py-8 space-y-4">
+              <CheckCircle2 className="w-20 h-20 text-green-300" />
               <div>
-                <h3 className="text-2xl font-display font-bold text-foreground mb-2 uppercase tracking-tight">Virement réussi</h3>
-                <p className="text-muted-foreground font-medium">Votre demande a été enregistrée.</p>
+                <h3 className="text-white font-black text-xl">Virement enregistré</h3>
+                <p className="text-white/60 text-sm mt-1">Il sera traité après le déblocage de votre compte.</p>
               </div>
-              <button onClick={reset} className="px-8 py-3 rounded-xl font-bold bg-primary text-white shadow-lg hover:shadow-primary/40 transition-all">Nouveau virement</button>
+              <button onClick={reset} className="px-8 py-3 rounded-xl font-black text-primary bg-white text-sm">Nouveau virement</button>
+            </motion.div>
+          )}
+
+          {step === "error" && (
+            <motion.div key="error" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center py-8 space-y-4">
+              <XCircle className="w-20 h-20 text-red-300" />
+              <div>
+                <h3 className="text-white font-black text-xl">Virement refusé</h3>
+                <p className="text-white/60 text-sm mt-1">{errorMsg}</p>
+              </div>
+              <button onClick={reset} className="px-8 py-3 rounded-xl font-black text-primary bg-white text-sm">Réessayer</button>
             </motion.div>
           )}
         </AnimatePresence>
