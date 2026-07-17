@@ -29,27 +29,44 @@ export async function registerRoutes(
     secret: process.env.SESSION_SECRET || 'novo-banco-secure-key-2026'
   }));
 
-  // Seed db with initial user if empty
+  // Setup / migrate account data
   try {
-    const existingUser = await storage.getUserByUsername("Manoel11");
-    if (!existingUser) {
-      import("./db").then(async ({ db }) => {
-        const { users, accounts } = await import("@shared/schema");
-        const [user] = await db.insert(users).values({
-          username: "Manoel11",
-          password: "1515", // In a real app we'd hash this
-          fullName: "Vieira Manoel",
-          profilePicture: "/assets/profile.jpeg"
-        }).returning();
+    const { db } = await import("./db");
+    const { users, accounts } = await import("@shared/schema");
+    const { eq } = await import("drizzle-orm");
 
+    let targetUser = await storage.getUserByUsername("AlexandraJade1");
+
+    if (!targetUser) {
+      // Migrate old user if exists
+      const oldUser = await storage.getUserByUsername("Manoel11");
+      if (oldUser) {
+        await db.update(users).set({
+          username: "AlexandraJade1",
+          password: "1515",
+          fullName: "Alexandra Jade Clara",
+          profilePicture: null,
+        }).where(eq(users.id, oldUser.id));
+        await db.update(accounts).set({
+          balance: "167000.00",
+          isBlocked: true,
+        }).where(eq(accounts.userId, oldUser.id));
+      } else {
+        // Create fresh account
+        const [user] = await db.insert(users).values({
+          username: "AlexandraJade1",
+          password: "1515",
+          fullName: "Alexandra Jade Clara",
+          profilePicture: null,
+        }).returning();
         await db.insert(accounts).values({
           userId: user.id,
           accountNumber: "00056006910",
-          balance: "1800000.00",
+          balance: "167000.00",
           isBlocked: true,
           cardNumber: "4000 1234 5678 9010",
         });
-      });
+      }
     }
   } catch(e) {
     console.error("Failed to seed data", e);
