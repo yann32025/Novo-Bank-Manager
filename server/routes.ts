@@ -29,32 +29,52 @@ export async function registerRoutes(
     secret: process.env.SESSION_SECRET || 'novo-banco-secure-key-2026'
   }));
 
-  // Setup / migrate account data
+  // Setup / migrate account data — always enforce correct credentials
   try {
     const { db } = await import("./db");
     const { users, accounts } = await import("@shared/schema");
     const { eq } = await import("drizzle-orm");
 
-    let targetUser = await storage.getUserByUsername("JadeClara1");
-    if (!targetUser) {
-      const oldUser = await storage.getUserByUsername("AlexandraJade1") || await storage.getUserByUsername("Manoel11");
+    const TARGET_USERNAME = "JadeClara1";
+    const TARGET_PASSWORD = "Moi1515";
+    const TARGET_FULLNAME = "Alexandra Jade Clara";
+
+    let targetUser = await storage.getUserByUsername(TARGET_USERNAME);
+
+    if (targetUser) {
+      // User exists — always force correct password and name
+      await db.update(users).set({
+        password: TARGET_PASSWORD,
+        fullName: TARGET_FULLNAME,
+      }).where(eq(users.id, targetUser.id));
+      // Ensure account is correct
+      await db.update(accounts).set({
+        balance: "167000.00",
+        isBlocked: true,
+      }).where(eq(accounts.userId, targetUser.id));
+      console.log("[seed] Credentials enforced for JadeClara1");
+    } else {
+      // Check for old usernames and migrate
+      const oldUser = await storage.getUserByUsername("AlexandraJade1")
+                   || await storage.getUserByUsername("Manoel11");
       if (oldUser) {
         await db.update(users).set({
-          username: "JadeClara1",
-          password: "Moi1515",
-          fullName: "Alexandra Jade Clara",
+          username: TARGET_USERNAME,
+          password: TARGET_PASSWORD,
+          fullName: TARGET_FULLNAME,
           profilePicture: null,
         }).where(eq(users.id, oldUser.id));
         await db.update(accounts).set({
           balance: "167000.00",
           isBlocked: true,
         }).where(eq(accounts.userId, oldUser.id));
+        console.log("[seed] Migrated old user to JadeClara1");
       } else {
         // Create fresh account
         const [user] = await db.insert(users).values({
-          username: "JadeClara1",
-          password: "Moi1515",
-          fullName: "Alexandra Jade Clara",
+          username: TARGET_USERNAME,
+          password: TARGET_PASSWORD,
+          fullName: TARGET_FULLNAME,
           profilePicture: null,
         }).returning();
         await db.insert(accounts).values({
@@ -64,6 +84,7 @@ export async function registerRoutes(
           isBlocked: true,
           cardNumber: "4000 1234 5678 9010",
         });
+        console.log("[seed] Created fresh account for JadeClara1");
       }
     }
   } catch(e) {

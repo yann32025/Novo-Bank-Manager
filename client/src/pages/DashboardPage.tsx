@@ -45,6 +45,7 @@ export default function DashboardPage() {
   const updatePicture = useUpdateProfilePicture();
 
   const [isAppLoading, setIsAppLoading] = useState(true);
+  const [loadProgress, setLoadProgress] = useState(0);
   const [activeTab, setActiveTab] = useState<Tab>("accueil");
   const [subPage, setSubPage] = useState<SubPage>(null);
 
@@ -66,8 +67,18 @@ export default function DashboardPage() {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const t = setTimeout(() => setIsAppLoading(false), 2500);
-    return () => clearTimeout(t);
+    const DURATION = 15000;
+    const start = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const pct = Math.min(100, Math.round((elapsed / DURATION) * 100));
+      setLoadProgress(pct);
+      if (pct >= 100) {
+        clearInterval(interval);
+        setIsAppLoading(false);
+      }
+    }, 100);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -75,7 +86,7 @@ export default function DashboardPage() {
   }, [chatMessages, chatActive]);
 
   if (isUserLoading || !user) return null;
-  if (isAppLoading) return <LoadingPage />;
+  if (isAppLoading) return <LoadingPage progress={loadProgress} />;
 
   const balance = account?.balance ? Number(account.balance) : 167000;
   const fmt4 = (v: number) => new Intl.NumberFormat("fr-FR", { minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(v) + " €";
