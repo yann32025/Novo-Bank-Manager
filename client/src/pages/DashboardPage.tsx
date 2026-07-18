@@ -52,6 +52,7 @@ export default function DashboardPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [securityOpen, setSecurityOpen] = useState(false);
   const [readNotifs, setReadNotifs] = useState<number[]>([]);
 
   const [searchTab, setSearchTab] = useState<"transactions" | "localisation">("transactions");
@@ -423,8 +424,8 @@ export default function DashboardPage() {
 
             {/* BNP Banner */}
             <div className="flex items-center gap-4 bg-card border border-border/50 rounded-2xl px-5 py-4 shadow-sm">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-md shrink-0" style={{ background: BNP_GREEN }}>
-                <img src="/assets/logo.png" alt="BNP Paribas" className="w-10 h-10 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
+              <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 shrink-0 bg-white shadow-md" style={{ borderColor: BNP_GREEN }}>
+                <img src="/assets/logo.png" alt="BNP Paribas" className="w-full h-full object-contain" />
               </div>
               <div>
                 <p className="font-black text-base">BNP Paribas</p>
@@ -503,58 +504,80 @@ export default function DashboardPage() {
 
       case "vous":
         return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 pb-28">
-            <div className="bg-card border border-border/50 rounded-2xl p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-secondary overflow-hidden border-2 border-primary/30">
-                {user.profilePicture
-                  ? <img src={user.profilePicture} alt="" className="w-full h-full object-cover" />
-                  : <div className="w-full h-full flex items-center justify-center"><span className="text-primary font-black text-xl">{user.fullName?.charAt(0)}</span></div>
-                }
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pb-28 min-h-screen" style={{ background: "#111111" }}>
+            {/* Dark profile header card */}
+            <div className="rounded-3xl mx-0 overflow-hidden mb-6" style={{ background: "linear-gradient(160deg, #1a1a2e 0%, #111111 100%)" }}>
+              <div className="flex flex-col items-center pt-8 pb-8 px-4">
+                {/* Avatar with amber ring */}
+                <div className="relative mb-4">
+                  <div className="p-1 rounded-full" style={{ background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)" }}>
+                    <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-700 border-2 border-zinc-900">
+                      {user.profilePicture
+                        ? <img src={user.profilePicture} alt="" className="w-full h-full object-cover" />
+                        : <div className="w-full h-full flex items-center justify-center">
+                            <span className="text-white font-black text-3xl">{user.fullName?.charAt(0) || "A"}</span>
+                          </div>
+                      }
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => { const u = prompt("URL de votre photo :"); if (u) updatePicture.mutate(u); }}
+                    className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center border-2 border-zinc-900 shadow-lg"
+                    style={{ background: "#f59e0b" }}
+                  >
+                    <Camera className="w-4 h-4 text-white" />
+                  </button>
+                </div>
+                <p className="text-white font-black text-2xl">{user.fullName}</p>
+                <p className="text-zinc-400 text-sm mt-1">Identifiant : {user.username}</p>
               </div>
-              <div className="flex-1">
-                <p className="font-black text-base">{user.fullName}</p>
-                <p className="text-muted-foreground text-xs">Compte particulier</p>
-                <p className="font-black text-sm text-primary mt-0.5">{fmt4(balance)}</p>
-              </div>
-              {account?.isBlocked && <span className="text-xs font-bold text-red-500 flex items-center gap-1">🔒</span>}
             </div>
 
-            <div>
-              <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mb-2 px-1">MON ESPACE</p>
-              <div className="bg-card border border-border/50 rounded-2xl overflow-hidden">
+            {/* PARAMÈTRES */}
+            <div className="px-4">
+              <p className="text-zinc-500 text-[11px] font-black uppercase tracking-widest mb-3">PARAMÈTRES</p>
+              <div className="space-y-3 mb-6">
                 {[
-                  { icon: <CreditCard className="w-5 h-5 text-primary" />, label: "Comptes & Cartes", action: () => goTab("comptes") },
-                  { icon: <PiggyBank className="w-5 h-5 text-blue-500" />, label: "Épargne & Placements", action: () => goSub("epargne") },
-                  { icon: <Send className="w-5 h-5 text-purple-500" />, label: "Virements & Paiements", action: () => goTab("virement") },
-                  { icon: <TrendingUp className="w-5 h-5 text-orange-500" />, label: "Crédits & Prêts", action: () => goSub("credits") },
-                  { icon: <Shield className="w-5 h-5 text-red-500" />, label: "Assurances & Sécurité", action: () => goSub("assurances") },
-                  { icon: <Gift className="w-5 h-5 text-pink-500" />, label: "Espace Cadeaux", action: () => goSub("cadeaux") },
+                  {
+                    icon: <ShieldCheck className="w-5 h-5 text-zinc-300" />,
+                    label: "Sécurité du compte",
+                    sub: "Mot de passe, Face ID",
+                    action: () => setSecurityOpen(true),
+                  },
+                  {
+                    icon: <Bell className="w-5 h-5 text-zinc-300" />,
+                    label: "Notifications",
+                    sub: "Alertes et SMS",
+                    action: () => setNotifOpen(true),
+                  },
+                  {
+                    icon: <HelpCircle className="w-5 h-5 text-zinc-300" />,
+                    label: "Aide & Support",
+                    sub: "FAQ et contact",
+                    action: () => setSupportOpen(true),
+                  },
                 ].map((item, i) => (
-                  <button key={i} onClick={item.action} className="w-full flex items-center gap-4 px-4 py-4 border-b border-border/30 last:border-0 hover:bg-secondary/50 transition-colors text-left">
-                    <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">{item.icon}</div>
-                    <span className="font-semibold text-sm flex-1">{item.label}</span>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                  <button key={i} onClick={item.action} className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-left transition-all active:scale-95" style={{ background: "#1c1c1e" }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#2c2c2e" }}>
+                      {item.icon}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-white font-semibold text-sm">{item.label}</p>
+                      <p className="text-zinc-500 text-xs mt-0.5">{item.sub}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-zinc-600" />
                   </button>
                 ))}
               </div>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mb-2 px-1">MON PROFIL</p>
-              <div className="bg-card border border-border/50 rounded-2xl overflow-hidden">
-                {[
-                  { icon: <User className="w-5 h-5 text-primary" />, label: "Profil & Paramètres", action: () => goSub("profil") },
-                  { icon: <HelpCircle className="w-5 h-5 text-green-500" />, label: "Support & Aide", action: () => setSupportOpen(true) },
-                ].map((item, i) => (
-                  <button key={i} onClick={item.action} className="w-full flex items-center gap-4 px-4 py-4 border-b border-border/30 last:border-0 hover:bg-secondary/50 transition-colors text-left">
-                    <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">{item.icon}</div>
-                    <span className="font-semibold text-sm flex-1">{item.label}</span>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="flex justify-center gap-4 py-2 opacity-40">
-              {[Facebook, Instagram, Twitter, Youtube].map((Icon, i) => <Icon key={i} className="w-5 h-5" />)}
+
+              {/* Déconnexion */}
+              <button
+                onClick={() => logout.mutate()}
+                className="w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-black text-red-400 text-base border border-red-900/60 transition-all active:scale-95"
+                style={{ background: "#2d0c0c" }}
+              >
+                <LogOut className="w-5 h-5" /> Déconnexion
+              </button>
             </div>
           </motion.div>
         );
@@ -731,6 +754,45 @@ export default function DashboardPage() {
                 <button onClick={() => logout.mutate()} className="w-full flex items-center gap-3 p-3 rounded-xl text-destructive hover:bg-destructive/10 font-bold text-sm transition-colors">
                   <LogOut className="w-4 h-4" /> Déconnexion
                 </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ─── SÉCURITÉ MODAL ─── */}
+      <AnimatePresence>
+        {securityOpen && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSecurityOpen(false)} className="fixed inset-0 bg-black/60 z-50" />
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 max-w-2xl mx-auto rounded-t-3xl z-50 p-5 shadow-2xl max-h-[75vh] overflow-y-auto" style={{ background: "#1c1c1e" }}>
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-primary" />
+                  <h3 className="font-black text-xl text-white">Sécurité du compte</h3>
+                </div>
+                <button onClick={() => setSecurityOpen(false)} className="p-2 hover:bg-white/10 rounded-full"><X className="w-5 h-5 text-zinc-400" /></button>
+              </div>
+              <div className="space-y-3 mb-6">
+                {[
+                  { icon: "🔑", label: "Changer le mot de passe", sub: "Modifier votre mot de passe actuel" },
+                  { icon: "👤", label: "Face ID / Biométrie", sub: "Connexion par reconnaissance faciale" },
+                  { icon: "📱", label: "Appareils connectés", sub: "Gérer vos sessions actives" },
+                  { icon: "🛡️", label: "Double authentification", sub: "Sécurité renforcée par SMS" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-4 px-4 py-4 rounded-2xl" style={{ background: "#2c2c2e" }}>
+                    <span className="text-2xl">{item.icon}</span>
+                    <div className="flex-1">
+                      <p className="text-white font-semibold text-sm">{item.label}</p>
+                      <p className="text-zinc-500 text-xs mt-0.5">{item.sub}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-zinc-600" />
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-start gap-3 p-4 rounded-2xl border border-orange-800/40" style={{ background: "#2d1a00" }}>
+                <AlertTriangle className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
+                <p className="text-orange-300 text-xs font-medium leading-relaxed">Votre compte est bloqué (procédure successorale). Pour toute modification de sécurité, contactez votre conseiller au <strong>3009</strong>.</p>
               </div>
             </motion.div>
           </>

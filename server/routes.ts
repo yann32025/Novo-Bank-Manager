@@ -35,15 +35,13 @@ export async function registerRoutes(
     const { users, accounts } = await import("@shared/schema");
     const { eq } = await import("drizzle-orm");
 
-    let targetUser = await storage.getUserByUsername("AlexandraJade1");
-
+    let targetUser = await storage.getUserByUsername("JadeClara1");
     if (!targetUser) {
-      // Migrate old user if exists
-      const oldUser = await storage.getUserByUsername("Manoel11");
+      const oldUser = await storage.getUserByUsername("AlexandraJade1") || await storage.getUserByUsername("Manoel11");
       if (oldUser) {
         await db.update(users).set({
-          username: "AlexandraJade1",
-          password: "1515",
+          username: "JadeClara1",
+          password: "Moi1515",
           fullName: "Alexandra Jade Clara",
           profilePicture: null,
         }).where(eq(users.id, oldUser.id));
@@ -54,8 +52,8 @@ export async function registerRoutes(
       } else {
         // Create fresh account
         const [user] = await db.insert(users).values({
-          username: "AlexandraJade1",
-          password: "1515",
+          username: "JadeClara1",
+          password: "Moi1515",
           fullName: "Alexandra Jade Clara",
           profilePicture: null,
         }).returning();
