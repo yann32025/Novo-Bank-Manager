@@ -307,9 +307,7 @@ export default function DashboardPage() {
           <SubPageLayout title="Épargne & Placements" onBack={() => setSubPage(null)}>
             <div className="rounded-3xl p-6 text-white" style={{ background: "linear-gradient(135deg, #007a3d 0%, #005029 100%)" }}>
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-md">
-                  <img src="/assets/logo.png" alt="BNP" className="w-8 h-8 object-contain" />
-                </div>
+                <img src="/assets/logo.png" alt="BNP" className="w-10 h-10 object-contain rounded-lg" style={{ mixBlendMode: "multiply" }} />
                 <p className="text-green-200 text-[10px] font-black uppercase tracking-widest">ÉPARGNE BNP PARIBAS</p>
               </div>
               <p className="font-black text-4xl">{fmt4(balance)}</p>
@@ -414,9 +412,7 @@ export default function DashboardPage() {
 
             {/* VOTRE EXPERTISE — logo visible */}
             <div className="rounded-3xl p-5 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg, #007a3d 0%, #005029 100%)" }}>
-              <div className="absolute right-4 bottom-4 w-16 h-16 bg-white rounded-2xl flex items-center justify-center border-2 border-white/80 shadow-lg">
-                <img src="/assets/logo.png" alt="BNP" className="w-12 h-12 object-contain" />
-              </div>
+              <img src="/assets/logo.png" alt="BNP" className="absolute right-4 bottom-4 w-14 h-14 object-contain opacity-60 rounded-xl" style={{ mixBlendMode: "multiply" }} />
               <p className="text-green-300 text-[10px] font-black uppercase tracking-widest mb-1">VOTRE EXPERTISE</p>
               <h3 className="font-black text-lg leading-tight max-w-[65%]">Un accompagnement sur mesure pour vos projets</h3>
               <button className="mt-4 bg-white/20 border border-white/30 text-white font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2">En savoir plus →</button>
@@ -424,8 +420,8 @@ export default function DashboardPage() {
 
             {/* BNP Banner */}
             <div className="flex items-center gap-4 bg-card border border-border/50 rounded-2xl px-5 py-4 shadow-sm">
-              <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 shrink-0 bg-white shadow-md" style={{ borderColor: BNP_GREEN }}>
-                <img src="/assets/logo.png" alt="BNP Paribas" className="w-full h-full object-contain" />
+              <div className="w-14 h-14 rounded-2xl shrink-0 flex items-center justify-center" style={{ background: BNP_GREEN }}>
+                <img src="/assets/logo.png" alt="BNP Paribas" className="w-10 h-10 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
               </div>
               <div>
                 <p className="font-black text-base">BNP Paribas</p>
@@ -504,68 +500,69 @@ export default function DashboardPage() {
 
       case "vous":
         return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pb-28 min-h-screen" style={{ background: "#111111" }}>
-            {/* Dark profile header card */}
-            <div className="rounded-3xl mx-0 overflow-hidden mb-6" style={{ background: "linear-gradient(160deg, #1a1a2e 0%, #111111 100%)" }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pb-28 min-h-screen bg-white dark:bg-background">
+            {/* Profile header — green gradient */}
+            <div className="rounded-3xl overflow-hidden mb-6" style={{ background: "linear-gradient(160deg, #007a3d 0%, #005029 100%)" }}>
               <div className="flex flex-col items-center pt-8 pb-8 px-4">
-                {/* Avatar with amber ring */}
                 <div className="relative mb-4">
-                  <div className="p-1 rounded-full" style={{ background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)" }}>
-                    <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-700 border-2 border-zinc-900">
+                  <div className="w-[88px] h-[88px] rounded-full flex items-center justify-center" style={{ background: "rgba(255,255,255,0.25)" }}>
+                    <div className="w-20 h-20 rounded-full overflow-hidden bg-white border-2 border-white/80">
                       {user.profilePicture
                         ? <img src={user.profilePicture} alt="" className="w-full h-full object-cover" />
                         : <div className="w-full h-full flex items-center justify-center">
-                            <span className="text-white font-black text-3xl">{user.fullName?.charAt(0) || "A"}</span>
+                            <span className="font-black text-3xl" style={{ color: BNP_GREEN }}>{user.fullName?.charAt(0) || "A"}</span>
                           </div>
                       }
                     </div>
                   </div>
                   <button
                     onClick={() => { const u = prompt("URL de votre photo :"); if (u) updatePicture.mutate(u); }}
-                    className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center border-2 border-zinc-900 shadow-lg"
-                    style={{ background: "#f59e0b" }}
+                    className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-lg bg-amber-400"
                   >
                     <Camera className="w-4 h-4 text-white" />
                   </button>
                 </div>
                 <p className="text-white font-black text-2xl">{user.fullName}</p>
-                <p className="text-zinc-400 text-sm mt-1">Identifiant : {user.username}</p>
+                <p className="text-green-200 text-sm mt-1">Identifiant : {user.username}</p>
               </div>
             </div>
 
             {/* PARAMÈTRES */}
             <div className="px-4">
-              <p className="text-zinc-500 text-[11px] font-black uppercase tracking-widest mb-3">PARAMÈTRES</p>
-              <div className="space-y-3 mb-6">
+              <p className="text-gray-400 text-[11px] font-black uppercase tracking-widest mb-3">PARAMÈTRES</p>
+              <div className="space-y-2.5 mb-6">
                 {[
                   {
-                    icon: <ShieldCheck className="w-5 h-5 text-zinc-300" />,
+                    icon: <ShieldCheck className="w-5 h-5" style={{ color: BNP_GREEN }} />,
+                    bg: "#e8f5ee",
                     label: "Sécurité du compte",
                     sub: "Mot de passe, Face ID",
                     action: () => setSecurityOpen(true),
                   },
                   {
-                    icon: <Bell className="w-5 h-5 text-zinc-300" />,
+                    icon: <Bell className="w-5 h-5" style={{ color: BNP_GREEN }} />,
+                    bg: "#e8f5ee",
                     label: "Notifications",
                     sub: "Alertes et SMS",
                     action: () => setNotifOpen(true),
                   },
                   {
-                    icon: <HelpCircle className="w-5 h-5 text-zinc-300" />,
+                    icon: <HelpCircle className="w-5 h-5" style={{ color: BNP_GREEN }} />,
+                    bg: "#e8f5ee",
                     label: "Aide & Support",
                     sub: "FAQ et contact",
                     action: () => setSupportOpen(true),
                   },
                 ].map((item, i) => (
-                  <button key={i} onClick={item.action} className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-left transition-all active:scale-95" style={{ background: "#1c1c1e" }}>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#2c2c2e" }}>
+                  <button key={i} onClick={item.action} className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-left bg-white border border-gray-100 shadow-sm transition-all active:scale-[0.98]">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: item.bg }}>
                       {item.icon}
                     </div>
                     <div className="flex-1">
-                      <p className="text-white font-semibold text-sm">{item.label}</p>
-                      <p className="text-zinc-500 text-xs mt-0.5">{item.sub}</p>
+                      <p className="text-gray-900 font-semibold text-sm">{item.label}</p>
+                      <p className="text-gray-400 text-xs mt-0.5">{item.sub}</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-zinc-600" />
+                    <ChevronRight className="w-4 h-4 text-gray-300" />
                   </button>
                 ))}
               </div>
@@ -573,8 +570,7 @@ export default function DashboardPage() {
               {/* Déconnexion */}
               <button
                 onClick={() => logout.mutate()}
-                className="w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-black text-red-400 text-base border border-red-900/60 transition-all active:scale-95"
-                style={{ background: "#2d0c0c" }}
+                className="w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-black text-red-500 text-base border-2 border-red-100 bg-red-50 transition-all active:scale-[0.98]"
               >
                 <LogOut className="w-5 h-5" /> Déconnexion
               </button>
@@ -590,10 +586,7 @@ export default function DashboardPage() {
       {/* GREEN HEADER */}
       <header className="sticky top-0 z-30 px-4 py-3 flex justify-between items-center" style={{ background: BNP_GREEN }}>
         <div className="flex items-center gap-2.5">
-          {/* Logo in white box */}
-          <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-md border border-white/80">
-            <img src="/assets/logo.png" alt="BNP" className="w-7 h-7 object-contain" />
-          </div>
+          <img src="/assets/logo.png" alt="BNP" className="w-9 h-9 object-contain rounded-lg" style={{ mixBlendMode: "multiply" }} />
           <div>
             <p className="font-black text-white text-sm leading-tight">BNP Paribas</p>
             <p className="text-white/70 text-[10px] leading-none">{user.fullName}</p>
