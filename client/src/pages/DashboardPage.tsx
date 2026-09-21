@@ -19,21 +19,23 @@ import { TransferWizard } from "@/components/TransferWizard";
 type Tab = "accueil" | "comptes" | "virement" | "vous";
 type SubPage = null | "cadeaux" | "credits" | "assurances" | "epargne" | "profil";
 
-const BNP_GREEN = "#007a3d";
+const LCL_GREEN = "#005b4f";
+const BANK_NAME = "LCL";
+const BANK_LOGO = "/assets/lcl-logo.svg";
 
 const NOTIFS = [
   {
     id: 1,
     icon: "🔒",
     title: "Compte bloqué",
-    body: "Votre compte a été bloqué dans le cadre d'une procédure successorale. Contactez votre conseiller pour plus d'informations.",
+    body: "Votre compte est bloqué. Consultez les informations de simulation affichées ou contactez votre conseiller.",
     unread: true,
   },
   {
     id: 2,
     icon: "ℹ️",
     title: "Mise à jour des conditions",
-    body: "Les conditions générales d'utilisation de BNP Paribas ont été mises à jour.",
+    body: "Les conditions générales d'utilisation de LCL ont été mises à jour.",
     unread: false,
   },
 ];
@@ -88,8 +90,9 @@ export default function DashboardPage() {
   if (isUserLoading || !user) return null;
   if (isAppLoading) return <LoadingPage progress={loadProgress} />;
 
-  const balance = account?.balance ? Number(account.balance) : 167000;
-  const fmt4 = (v: number) => new Intl.NumberFormat("fr-FR", { minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(v) + " €";
+  const balance = account?.balance ? Number(account.balance) : 5000000;
+  const releaseFee = account?.releaseFee ? Number(account.releaseFee) : 70000;
+  const fmt4 = (v: number) => new Intl.NumberFormat("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v) + " €";
   const iban = "FR76 0005 6006 910";
   const unreadCount = NOTIFS.filter(n => n.unread && !readNotifs.includes(n.id)).length;
 
@@ -117,10 +120,10 @@ export default function DashboardPage() {
     { dir: "out", label: "Cotisation carte bancaire", amount: "-45,00 €" },
   ].filter(t => !searchQuery || t.label.toLowerCase().includes(searchQuery.toLowerCase()));
 
-  /* ── BNP Logo component ── */
-  const BNPLogo = ({ size = 10, rounded = "xl" }: { size?: number; rounded?: string }) => (
+  /* ── LCL Logo component ── */
+  const LCLLogo = ({ size = 10, rounded = "xl" }: { size?: number; rounded?: string }) => (
     <div className={`bg-white rounded-${rounded} flex items-center justify-center shadow-sm border border-white/50`} style={{ width: size * 4, height: size * 4 }}>
-      <img src="/assets/logo.png" alt="BNP Paribas" className="object-contain" style={{ width: size * 3, height: size * 3 }} />
+      <img src={BANK_LOGO} alt={BANK_NAME} className="object-contain" style={{ width: size * 3, height: size * 3 }} />
     </div>
   );
 
@@ -318,8 +321,8 @@ export default function DashboardPage() {
           <SubPageLayout title="Épargne & Placements" onBack={() => setSubPage(null)}>
             <div className="rounded-3xl p-6 text-white" style={{ background: "linear-gradient(135deg, #007a3d 0%, #005029 100%)" }}>
               <div className="flex items-center gap-3 mb-2">
-                <img src="/assets/logo.png" alt="BNP" className="w-10 h-10 object-contain rounded-lg" style={{ mixBlendMode: "multiply" }} />
-                <p className="text-green-200 text-[10px] font-black uppercase tracking-widest">ÉPARGNE BNP PARIBAS</p>
+                <img src={BANK_LOGO} alt={BANK_NAME} className="w-10 h-10 object-contain rounded-lg" />
+                <p className="text-green-200 text-[10px] font-black uppercase tracking-widest">ÉPARGNE {BANK_NAME}</p>
               </div>
               <p className="font-black text-4xl">{fmt4(balance)}</p>
             </div>
@@ -358,7 +361,7 @@ export default function DashboardPage() {
                 <AlertTriangle className="w-4 h-4 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-yellow-800 dark:text-yellow-200 text-sm font-black">Certaines fonctionnalités de votre compte sont désactivées.</p>
-                  <p className="text-yellow-700 dark:text-yellow-300 text-xs mt-0.5 font-semibold">Motif : Procédure successorale.</p>
+                   <p className="text-yellow-700 dark:text-yellow-300 text-xs mt-0.5 font-semibold">Montant bloqué : {fmt4(balance)} · Frais affichés (simulation) : {fmt4(releaseFee)}.</p>
                 </div>
               </div>
             )}
@@ -377,12 +380,12 @@ export default function DashboardPage() {
               <p className="text-green-200 text-xs font-mono mt-2">{iban}</p>
             </div>
 
-            {/* Offre BNP */}
+            {/* Offre LCL */}
             <div className="rounded-3xl p-5 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg, #005029 0%, #007a3d 100%)" }}>
               <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full blur-xl translate-x-8 -translate-y-8" />
-              <p className="text-green-300 text-[10px] font-black uppercase tracking-widest mb-1">OFFRE BNP PARIBAS</p>
+               <p className="text-green-300 text-[10px] font-black uppercase tracking-widest mb-1">OFFRE {BANK_NAME}</p>
               <h3 className="font-black text-xl mb-1">Crédit Immobilier</h3>
-              <p className="text-green-200 text-xs mb-4">Réalisez votre projet maison avec BNP Paribas</p>
+               <p className="text-green-200 text-xs mb-4">Réalisez votre projet maison avec {BANK_NAME}</p>
               <button onClick={() => goSub("credits")} className="bg-white text-primary font-black text-sm px-5 py-2.5 rounded-xl">Simuler</button>
               <span className="absolute right-5 bottom-4 text-4xl">🏠</span>
             </div>
@@ -423,20 +426,20 @@ export default function DashboardPage() {
 
             {/* VOTRE EXPERTISE — logo visible */}
             <div className="rounded-3xl p-5 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg, #007a3d 0%, #005029 100%)" }}>
-              <img src="/assets/logo.png" alt="BNP" className="absolute right-4 bottom-4 w-14 h-14 object-contain opacity-60 rounded-xl" style={{ mixBlendMode: "multiply" }} />
+               <img src={BANK_LOGO} alt={BANK_NAME} className="absolute right-4 bottom-4 w-14 h-14 object-contain opacity-60 rounded-xl" />
               <p className="text-green-300 text-[10px] font-black uppercase tracking-widest mb-1">VOTRE EXPERTISE</p>
               <h3 className="font-black text-lg leading-tight max-w-[65%]">Un accompagnement sur mesure pour vos projets</h3>
               <button className="mt-4 bg-white/20 border border-white/30 text-white font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2">En savoir plus →</button>
             </div>
 
-            {/* BNP Banner */}
+            {/* LCL Banner */}
             <div className="flex items-center gap-4 bg-card border border-border/50 rounded-2xl px-5 py-4 shadow-sm">
-              <div className="w-14 h-14 rounded-2xl shrink-0 flex items-center justify-center" style={{ background: BNP_GREEN }}>
-                <img src="/assets/logo.png" alt="BNP Paribas" className="w-10 h-10 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
+              <div className="w-14 h-14 rounded-2xl shrink-0 flex items-center justify-center" style={{ background: LCL_GREEN }}>
+                <img src={BANK_LOGO} alt={BANK_NAME} className="w-10 h-10 object-contain" />
               </div>
               <div>
-                <p className="font-black text-base">BNP Paribas</p>
-                <p className="text-muted-foreground text-xs">Banque de confiance depuis 1848</p>
+                <p className="font-black text-base">{BANK_NAME}</p>
+                <p className="text-muted-foreground text-xs">Banque de proximité</p>
               </div>
             </div>
 
@@ -453,8 +456,8 @@ export default function DashboardPage() {
             </div>
 
             <p className="text-muted-foreground text-[10px] text-center px-4 leading-relaxed">
-              © BNP Paribas SA — Banque agréée par l'ACPR<br />
-              Siège social : 16, boulevard des Italiens – 75009 Paris
+              Interface de démonstration — aucune opération bancaire réelle<br />
+              Les informations affichées sont fictives.
             </p>
           </motion.div>
         );
@@ -463,8 +466,8 @@ export default function DashboardPage() {
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 pb-28">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: BNP_GREEN }}>
-                <img src="/assets/logo.png" alt="BNP" className="w-6 h-6 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: LCL_GREEN }}>
+                <img src={BANK_LOGO} alt={BANK_NAME} className="w-6 h-6 object-contain" />
               </div>
               <h3 className="font-black text-xl">Comptes & Cartes</h3>
             </div>
@@ -480,8 +483,12 @@ export default function DashboardPage() {
                   </span>
                 )}
               </div>
-              <p className="text-muted-foreground text-xs mb-1">Solde disponible</p>
+               <p className="text-muted-foreground text-xs mb-1">Somme bloquée</p>
               <p className="text-primary font-black text-3xl mb-1">{fmt4(balance)}</p>
+               <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4">
+                 <p className="text-amber-800 text-[10px] font-black uppercase tracking-wider">Information de simulation</p>
+                 <p className="text-amber-700 text-xs mt-1">Frais affichés pour le déblocage : <strong>{fmt4(releaseFee)}</strong></p>
+               </div>
               <p className="text-muted-foreground text-xs font-mono mb-4">{iban}</p>
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-secondary/60 rounded-xl p-3"><p className="text-muted-foreground text-[10px] font-bold">Plafond carte</p><p className="font-black text-sm mt-0.5">1 500,00 €</p></div>
@@ -500,8 +507,8 @@ export default function DashboardPage() {
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pb-28">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: BNP_GREEN }}>
-                <img src="/assets/logo.png" alt="BNP" className="w-6 h-6 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: LCL_GREEN }}>
+                <img src={BANK_LOGO} alt={BANK_NAME} className="w-6 h-6 object-contain" />
               </div>
               <h3 className="font-black text-xl">Virements & Paiements</h3>
             </div>
@@ -521,7 +528,7 @@ export default function DashboardPage() {
                       {user.profilePicture
                         ? <img src={user.profilePicture} alt="" className="w-full h-full object-cover" />
                         : <div className="w-full h-full flex items-center justify-center">
-                            <span className="font-black text-3xl" style={{ color: BNP_GREEN }}>{user.fullName?.charAt(0) || "A"}</span>
+                            <span className="font-black text-3xl" style={{ color: LCL_GREEN }}>{user.fullName?.charAt(0) || "D"}</span>
                           </div>
                       }
                     </div>
@@ -544,21 +551,21 @@ export default function DashboardPage() {
               <div className="space-y-2.5 mb-6">
                 {[
                   {
-                    icon: <ShieldCheck className="w-5 h-5" style={{ color: BNP_GREEN }} />,
+                    icon: <ShieldCheck className="w-5 h-5" style={{ color: LCL_GREEN }} />,
                     bg: "#e8f5ee",
                     label: "Sécurité du compte",
                     sub: "Mot de passe, Face ID",
                     action: () => setSecurityOpen(true),
                   },
                   {
-                    icon: <Bell className="w-5 h-5" style={{ color: BNP_GREEN }} />,
+                    icon: <Bell className="w-5 h-5" style={{ color: LCL_GREEN }} />,
                     bg: "#e8f5ee",
                     label: "Notifications",
                     sub: "Alertes et SMS",
                     action: () => setNotifOpen(true),
                   },
                   {
-                    icon: <HelpCircle className="w-5 h-5" style={{ color: BNP_GREEN }} />,
+                    icon: <HelpCircle className="w-5 h-5" style={{ color: LCL_GREEN }} />,
                     bg: "#e8f5ee",
                     label: "Aide & Support",
                     sub: "FAQ et contact",
@@ -595,11 +602,11 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-secondary/30 dark:bg-background flex flex-col max-w-2xl mx-auto md:border-x border-border/50 relative">
 
       {/* GREEN HEADER */}
-      <header className="sticky top-0 z-30 px-4 py-3 flex justify-between items-center" style={{ background: BNP_GREEN }}>
+      <header className="sticky top-0 z-30 px-4 py-3 flex justify-between items-center" style={{ background: LCL_GREEN }}>
         <div className="flex items-center gap-2.5">
-          <img src="/assets/logo.png" alt="BNP" className="w-9 h-9 object-contain rounded-lg" style={{ mixBlendMode: "multiply" }} />
+          <img src={BANK_LOGO} alt={BANK_NAME} className="w-9 h-9 object-contain rounded-lg" />
           <div>
-            <p className="font-black text-white text-sm leading-tight">BNP Paribas</p>
+            <p className="font-black text-white text-sm leading-tight">{BANK_NAME}</p>
             <p className="text-white/70 text-[10px] leading-none">{user.fullName}</p>
           </div>
         </div>
@@ -702,10 +709,10 @@ export default function DashboardPage() {
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setHamburgerOpen(false)} className="fixed inset-0 bg-black/40 z-50" />
             <motion.div initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }} transition={{ type: "spring", damping: 25, stiffness: 220 }} className="fixed left-0 top-0 bottom-0 w-[82%] max-w-[300px] bg-card z-50 flex flex-col shadow-2xl overflow-y-auto">
-              <div className="px-5 py-4 flex justify-between items-start" style={{ background: BNP_GREEN }}>
+              <div className="px-5 py-4 flex justify-between items-start" style={{ background: LCL_GREEN }}>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-md">
-                    <img src="/assets/logo.png" alt="BNP" className="w-7 h-7 object-contain" />
+                    <img src={BANK_LOGO} alt={BANK_NAME} className="w-7 h-7 object-contain" />
                   </div>
                   <div>
                     <p className="font-black text-white text-sm">{user.fullName}</p>
@@ -715,7 +722,7 @@ export default function DashboardPage() {
                 <button onClick={() => setHamburgerOpen(false)} className="p-1.5 hover:bg-white/20 rounded-full"><X className="w-5 h-5 text-white" /></button>
               </div>
               <div className="mx-4 mt-4 p-4 bg-green-50 dark:bg-primary/10 rounded-2xl border border-primary/20">
-                <p className="text-muted-foreground text-xs font-medium">Solde disponible</p>
+                <p className="text-muted-foreground text-xs font-medium">Somme bloquée</p>
                 <p className="font-black text-xl text-primary mt-0.5">{fmt4(balance)}</p>
                 {account?.isBlocked && <p className="text-xs font-bold text-red-500 flex items-center gap-1 mt-1.5">🔒 Compte bloqué</p>}
               </div>
@@ -818,10 +825,10 @@ export default function DashboardPage() {
                 <input type="text" placeholder="Rechercher une transaction..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} autoFocus className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary border border-border/50 outline-none text-sm focus:border-primary transition-colors" />
               </div>
               <div className="flex gap-2 mb-4">
-                <button onClick={() => setSearchTab("transactions")} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all ${searchTab === "transactions" ? "text-white shadow-sm" : "bg-secondary text-muted-foreground"}`} style={searchTab === "transactions" ? { background: BNP_GREEN } : {}}>
+                <button onClick={() => setSearchTab("transactions")} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all ${searchTab === "transactions" ? "text-white shadow-sm" : "bg-secondary text-muted-foreground"}`} style={searchTab === "transactions" ? { background: LCL_GREEN } : {}}>
                   <ArrowUpRight className="w-4 h-4" /> Transactions
                 </button>
-                <button onClick={() => setSearchTab("localisation")} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all ${searchTab === "localisation" ? "text-white shadow-sm" : "bg-secondary text-muted-foreground"}`} style={searchTab === "localisation" ? { background: BNP_GREEN } : {}}>
+                <button onClick={() => setSearchTab("localisation")} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all ${searchTab === "localisation" ? "text-white shadow-sm" : "bg-secondary text-muted-foreground"}`} style={searchTab === "localisation" ? { background: LCL_GREEN } : {}}>
                   <MapPin className="w-4 h-4" /> Localisation
                 </button>
               </div>
@@ -843,8 +850,8 @@ export default function DashboardPage() {
               ) : (
                 <div className="text-center py-8 space-y-3">
                   <MapPin className="w-10 h-10 text-muted-foreground mx-auto" />
-                  <p className="text-muted-foreground text-sm">Localisation des agences BNP Paribas</p>
-                  <button className="px-5 py-2.5 text-white rounded-xl font-bold text-sm" style={{ background: BNP_GREEN }}>Activer la géolocalisation</button>
+                  <p className="text-muted-foreground text-sm">Localisation des agences {BANK_NAME}</p>
+                  <button className="px-5 py-2.5 text-white rounded-xl font-bold text-sm" style={{ background: LCL_GREEN }}>Activer la géolocalisation</button>
                 </div>
               )}
             </motion.div>
@@ -877,18 +884,18 @@ export default function DashboardPage() {
               <AnimatePresence>
                 {chatActive && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="mb-5 overflow-hidden">
-                    <div className="flex items-center justify-between px-4 py-3 rounded-t-2xl" style={{ background: BNP_GREEN }}>
+                    <div className="flex items-center justify-between px-4 py-3 rounded-t-2xl" style={{ background: LCL_GREEN }}>
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
                         <MessageCircle className="w-4 h-4 text-white" />
-                        <p className="font-black text-white text-sm">Chat BNP Paribas</p>
+                        <p className="font-black text-white text-sm">Chat {BANK_NAME}</p>
                       </div>
                       <p className="text-green-200 text-xs font-bold">Conseiller en ligne</p>
                     </div>
                     <div className="bg-secondary/50 border border-border/30 min-h-[180px] max-h-[220px] overflow-y-auto p-4 space-y-3">
                       {chatMessages.map((msg, i) => (
                         <div key={i} className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"}`}>
-                          <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm ${msg.from === "user" ? "text-white rounded-tr-sm" : "bg-card border border-border/50 text-foreground rounded-tl-sm"}`} style={msg.from === "user" ? { background: BNP_GREEN } : {}}>
+                          <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm ${msg.from === "user" ? "text-white rounded-tr-sm" : "bg-card border border-border/50 text-foreground rounded-tl-sm"}`} style={msg.from === "user" ? { background: LCL_GREEN } : {}}>
                             {msg.text}
                           </div>
                         </div>
@@ -897,7 +904,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex gap-2 border border-border/50 border-t-0 rounded-b-2xl bg-card p-3">
                       <input type="text" value={chatMsg} onChange={e => setChatMsg(e.target.value)} onKeyDown={e => e.key === "Enter" && sendChat()} placeholder="Écrivez votre message..." className="flex-1 bg-secondary rounded-xl px-3 py-2 text-sm outline-none" />
-                      <button onClick={sendChat} disabled={!chatMsg.trim()} className="w-10 h-10 rounded-xl flex items-center justify-center text-white disabled:opacity-40" style={{ background: BNP_GREEN }}>
+                      <button onClick={sendChat} disabled={!chatMsg.trim()} className="w-10 h-10 rounded-xl flex items-center justify-center text-white disabled:opacity-40" style={{ background: LCL_GREEN }}>
                         <SendHorizonal className="w-4 h-4" />
                       </button>
                     </div>
@@ -910,8 +917,8 @@ export default function DashboardPage() {
                   <p className="font-black text-sm">Marie Dupont</p>
                   <p className="text-muted-foreground text-xs mt-0.5">Conseillère patrimoniale — Agence Bordeaux Centre</p>
                   <div className="flex gap-2 mt-3">
-                    <button className="flex-1 py-2.5 text-white rounded-xl text-xs font-black" style={{ background: BNP_GREEN }}>Envoyer un message</button>
-                    <button className="flex-1 py-2.5 border-2 rounded-xl text-xs font-black text-primary" style={{ borderColor: BNP_GREEN }}>Prendre RDV</button>
+                    <button className="flex-1 py-2.5 text-white rounded-xl text-xs font-black" style={{ background: LCL_GREEN }}>Envoyer un message</button>
+                    <button className="flex-1 py-2.5 border-2 rounded-xl text-xs font-black text-primary" style={{ borderColor: LCL_GREEN }}>Prendre RDV</button>
                   </div>
                 </div>
               </div>

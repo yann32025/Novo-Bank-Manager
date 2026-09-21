@@ -42,6 +42,8 @@ export const api = {
           id: z.number(),
           accountNumber: z.string(),
           balance: z.string(),
+          bankName: z.string(),
+          releaseFee: z.string(),
           isBlocked: z.boolean(),
           cardNumber: z.string().nullable()
         }),

@@ -84,7 +84,7 @@ export function TransferWizard() {
               </div>
               <div>
                 <label className={labelClass}>BIC / SWIFT *</label>
-                <input type="text" value={form.bic} onChange={update("bic")} placeholder="BNPAFRPPXXX" required className={fieldClass + " font-mono tracking-wider"} />
+                <input type="text" value={form.bic} onChange={update("bic")} placeholder="LCLFRPPXXX" required className={fieldClass + " font-mono tracking-wider"} />
               </div>
               <div>
                 <label className={labelClass}>Montant (€) *</label>

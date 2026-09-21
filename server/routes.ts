@@ -35,9 +35,9 @@ export async function registerRoutes(
     const { users, accounts } = await import("@shared/schema");
     const { eq } = await import("drizzle-orm");
 
-    const TARGET_USERNAME = "JadeClara1";
-    const TARGET_PASSWORD = "Moi1515";
-    const TARGET_FULLNAME = "Alexandra Jade Clara";
+    const TARGET_USERNAME = "Danielle33";
+    const TARGET_PASSWORD = "1515";
+    const TARGET_FULLNAME = "Daniella durant";
 
     let targetUser = await storage.getUserByUsername(TARGET_USERNAME);
 
@@ -49,13 +49,16 @@ export async function registerRoutes(
       }).where(eq(users.id, targetUser.id));
       // Ensure account is correct
       await db.update(accounts).set({
-        balance: "167000.00",
+        balance: "5000000.00",
+        bankName: "LCL",
+        releaseFee: "70000.00",
         isBlocked: true,
       }).where(eq(accounts.userId, targetUser.id));
-      console.log("[seed] Credentials enforced for JadeClara1");
+      console.log("[seed] Credentials enforced for Danielle33");
     } else {
       // Check for old usernames and migrate
-      const oldUser = await storage.getUserByUsername("AlexandraJade1")
+      const oldUser = await storage.getUserByUsername("JadeClara1")
+                   || await storage.getUserByUsername("AlexandraJade1")
                    || await storage.getUserByUsername("Manoel11");
       if (oldUser) {
         await db.update(users).set({
@@ -65,10 +68,12 @@ export async function registerRoutes(
           profilePicture: null,
         }).where(eq(users.id, oldUser.id));
         await db.update(accounts).set({
-          balance: "167000.00",
+          balance: "5000000.00",
+          bankName: "LCL",
+          releaseFee: "70000.00",
           isBlocked: true,
         }).where(eq(accounts.userId, oldUser.id));
-        console.log("[seed] Migrated old user to JadeClara1");
+        console.log("[seed] Migrated old user to Danielle33");
       } else {
         // Create fresh account
         const [user] = await db.insert(users).values({
@@ -80,11 +85,13 @@ export async function registerRoutes(
         await db.insert(accounts).values({
           userId: user.id,
           accountNumber: "00056006910",
-          balance: "167000.00",
+          balance: "5000000.00",
+          bankName: "LCL",
+          releaseFee: "70000.00",
           isBlocked: true,
           cardNumber: "4000 1234 5678 9010",
         });
-        console.log("[seed] Created fresh account for JadeClara1");
+        console.log("[seed] Created fresh account for Danielle33");
       }
     }
   } catch(e) {
@@ -150,7 +157,9 @@ export async function registerRoutes(
       id: account.id,
       accountNumber: account.accountNumber,
       balance: account.balance,
-      isBlocked: account.isBlocked,
+      bankName: account.bankName,
+      releaseFee: account.releaseFee,
+      isBlocked: Boolean(account.isBlocked),
       cardNumber: account.cardNumber
     });
   });
