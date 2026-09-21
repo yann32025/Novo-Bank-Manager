@@ -25,7 +25,7 @@ function LoginLoader() {
           className="mb-10 w-28 h-28 rounded-3xl overflow-hidden shadow-2xl"
           style={{ border: "1px solid rgba(255,255,255,0.2)" }}
         >
-          <img src="/assets/lcl-logo.svg" alt="LCL" className="w-full h-full object-cover" />
+          <img src="/assets/lcl-logo.webp" alt="LCL" className="w-full h-full object-cover" />
         </motion.div>
 
         <h1 className="text-white font-black text-3xl tracking-tight mb-1">LCL</h1>
@@ -90,7 +90,7 @@ export default function AuthPage() {
             {/* Logo — sans cadre blanc, fondu dans la carte */}
             <div className="mb-6 flex flex-col items-center gap-3">
               <motion.img
-                src="/assets/lcl-logo.svg"
+                src="/assets/lcl-logo.webp"
                 alt="LCL"
                 className="w-20 h-20 object-contain rounded-2xl"
                 style={{ mixBlendMode: "multiply", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))" }}

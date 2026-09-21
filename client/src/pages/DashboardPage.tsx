@@ -21,7 +21,7 @@ type SubPage = null | "cadeaux" | "credits" | "assurances" | "epargne" | "profil
 
 const LCL_GREEN = "#005b4f";
 const BANK_NAME = "LCL";
-const BANK_LOGO = "/assets/lcl-logo.svg";
+const BANK_LOGO = "/assets/lcl-logo.webp";
 
 const NOTIFS = [
   {

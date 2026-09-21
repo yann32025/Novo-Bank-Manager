@@ -35,7 +35,7 @@ export default function LoadingPage({ progress = 0 }: { progress?: number }) {
           className="mb-10 w-28 h-28 rounded-3xl overflow-hidden shadow-2xl"
           style={{ border: "2px solid rgba(255,255,255,0.2)", boxShadow: "0 20px 60px rgba(0,0,0,0.4)" }}
         >
-          <img src="/assets/lcl-logo.svg" alt="LCL" className="w-full h-full object-cover" />
+          <img src="/assets/lcl-logo.webp" alt="LCL" className="w-full h-full object-cover" />
         </motion.div>
 
         {/* Title */}
