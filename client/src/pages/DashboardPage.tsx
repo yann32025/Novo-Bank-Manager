@@ -41,6 +41,53 @@ const NOTIFS = [
   },
 ];
 
+const PROMO_BANNERS: Array<{
+  eyebrow: string;
+  title: string;
+  body: string;
+  action: string;
+  secondaryAction: string;
+  target: SubPage;
+  icon: string;
+}> = [
+  {
+    eyebrow: "CADEAU · OFFRE DE BIENVENUE",
+    title: "80 € offerts",
+    body: "Pour tout nouveau client majeur qui ouvre un compte depuis l'application mobile LCL Mes Comptes et souscrit au service de mobilité bancaire.",
+    action: "Ouvrir un compte",
+    secondaryAction: "Devenir client",
+    target: "cadeaux",
+    icon: "🎁",
+  },
+  {
+    eyebrow: "PRÊT PERSONNEL",
+    title: "Financez vos projets",
+    body: "Une solution de prêt personnel adaptée à vos envies, avec une simulation simple depuis votre espace.",
+    action: "Découvrir l'offre",
+    secondaryAction: "Simuler",
+    target: "credits",
+    icon: "💳",
+  },
+  {
+    eyebrow: "PROTECTION LCL",
+    title: "Votre maison, bien protégée",
+    body: "Découvrez nos assurances habitation et auto pour protéger ce qui compte au quotidien.",
+    action: "Voir les assurances",
+    secondaryAction: "En savoir plus",
+    target: "assurances",
+    icon: "🛡️",
+  },
+  {
+    eyebrow: "ÉPARGNE",
+    title: "Faites grandir vos projets",
+    body: "Explorez les solutions d'épargne LCL et choisissez celle qui correspond à vos objectifs.",
+    action: "Découvrir l'épargne",
+    secondaryAction: "Explorer",
+    target: "epargne",
+    icon: "🌱",
+  },
+];
+
 export default function DashboardPage() {
   const { data: user, isLoading: isUserLoading } = useUser();
   const { data: account } = useAccount();
@@ -51,6 +98,7 @@ export default function DashboardPage() {
   const [loadProgress, setLoadProgress] = useState(0);
   const [activeTab, setActiveTab] = useState<Tab>("accueil");
   const [subPage, setSubPage] = useState<SubPage>(null);
+  const [activePromo, setActivePromo] = useState(0);
 
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -87,6 +135,13 @@ export default function DashboardPage() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages, chatActive]);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActivePromo(current => (current + 1) % PROMO_BANNERS.length);
+    }, 5500);
+    return () => window.clearInterval(interval);
+  }, []);
 
   if (isUserLoading || !user) return null;
   if (isAppLoading) return <LoadingPage progress={loadProgress} />;
@@ -452,6 +507,63 @@ export default function DashboardPage() {
                   <button key={i} className="w-11 h-11 rounded-full flex items-center justify-center text-white shadow-md" style={{ backgroundColor: bg }}>
                     <Icon className="w-5 h-5" />
                   </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Publicité défilante — offre de bienvenue et offres LCL */}
+            <div className="relative overflow-hidden rounded-3xl border border-blue-900/20 shadow-xl" aria-label="Offres promotionnelles LCL">
+              <AnimatePresence mode="wait">
+                {(() => {
+                  const promo = PROMO_BANNERS[activePromo];
+                  return (
+                    <motion.div
+                      key={activePromo}
+                      initial={{ opacity: 0, x: 28 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -28 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="relative min-h-[238px] overflow-hidden p-5 text-white"
+                      style={{ background: "linear-gradient(135deg, #111b55 0%, #202b78 68%, #3346a4 100%)" }}
+                    >
+                      <div className="absolute -right-10 -top-12 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
+                      <div className="absolute -bottom-16 -right-2 text-[110px] leading-none opacity-15">{promo.icon}</div>
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-yellow-300 text-[10px] font-black uppercase tracking-[0.18em]">{promo.eyebrow}</p>
+                          <span className="rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider">Publicité</span>
+                        </div>
+                        <div className="mt-4 max-w-[90%]">
+                          <h3 className="font-black text-3xl leading-none tracking-tight">{promo.title}</h3>
+                          <p className="mt-3 max-w-[360px] text-xs leading-relaxed text-blue-100">{promo.body}</p>
+                        </div>
+                        <div className="mt-5 flex flex-wrap items-center gap-2">
+                          <button
+                            onClick={() => goSub(promo.target)}
+                            className="rounded-xl bg-accent px-4 py-2.5 text-xs font-black text-accent-foreground shadow-lg shadow-black/15 transition-transform hover:-translate-y-0.5"
+                          >
+                            {promo.action}
+                          </button>
+                          <button
+                            onClick={() => goSub(promo.target)}
+                            className="rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-white/20"
+                          >
+                            {promo.secondaryAction}
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })()}
+              </AnimatePresence>
+              <div className="absolute bottom-3 left-5 z-20 flex items-center gap-1.5" aria-label="Sélection de la publicité">
+                {PROMO_BANNERS.map((promo, index) => (
+                  <button
+                    key={promo.eyebrow}
+                    onClick={() => setActivePromo(index)}
+                    aria-label={`Afficher ${promo.eyebrow.toLowerCase()}`}
+                    className={`h-1.5 rounded-full transition-all ${index === activePromo ? "w-7 bg-accent" : "w-1.5 bg-white/45"}`}
+                  />
                 ))}
               </div>
             </div>
