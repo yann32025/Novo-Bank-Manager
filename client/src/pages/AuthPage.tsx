@@ -11,7 +11,7 @@ function LoginLoader() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex flex-col items-center justify-center"
-      style={{ background: "linear-gradient(160deg, #005029 0%, #007a3d 60%, #00a550 100%)" }}
+      style={{ background: "linear-gradient(160deg, #111b55 0%, #202b78 60%, #3346a4 100%)" }}
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-32 -left-32 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
@@ -46,7 +46,7 @@ function LoginLoader() {
           className="flex items-center gap-2 px-5 py-2.5 rounded-full"
           style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)" }}
         >
-          <div className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-yellow-300 animate-pulse" />
           <p className="text-white/80 text-xs font-bold">Connexion SSL sécurisée</p>
         </div>
       </div>
@@ -143,7 +143,7 @@ export default function AuthPage() {
 
               <div className="flex items-center gap-2 px-1">
                 <button type="button" onClick={() => setRememberMe(!rememberMe)} className="flex items-center gap-2">
-                  <div className={`w-9 h-5 rounded-full transition-colors relative flex items-center px-0.5 ${rememberMe ? "bg-primary" : "bg-white/25"}`}>
+                  <div className={`w-9 h-5 rounded-full transition-colors relative flex items-center px-0.5 ${rememberMe ? "bg-accent" : "bg-white/25"}`}>
                     <motion.div
                       layout
                       className="w-4 h-4 bg-white rounded-full shadow-sm"
@@ -164,7 +164,7 @@ export default function AuthPage() {
               <button
                 type="submit"
                 disabled={login.isPending || !username || !password}
-                className="w-full py-3.5 rounded-xl font-black text-white bg-primary shadow-xl hover:shadow-primary/50 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 text-sm tracking-wide"
+                className="w-full py-3.5 rounded-xl font-black text-accent-foreground bg-accent shadow-xl hover:shadow-accent/40 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 text-sm tracking-wide"
               >
                 Se connecter
               </button>

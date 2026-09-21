@@ -18,7 +18,7 @@ export default function LoadingPage({ progress = 0 }: { progress?: number }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex flex-col items-center justify-center"
-      style={{ background: "linear-gradient(160deg, #003d20 0%, #005029 40%, #007a3d 100%)" }}
+      style={{ background: "linear-gradient(160deg, #111b55 0%, #202b78 45%, #3346a4 100%)" }}
     >
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -40,14 +40,14 @@ export default function LoadingPage({ progress = 0 }: { progress?: number }) {
 
         {/* Title */}
         <h1 className="text-white font-black text-3xl tracking-tight mb-1">LCL</h1>
-        <p className="text-green-300 text-sm font-medium mb-12 tracking-wide">Espace Client Sécurisé</p>
+        <p className="text-yellow-300 text-sm font-medium mb-12 tracking-wide">Espace Client Sécurisé</p>
 
         {/* Progress bar */}
         <div className="w-full mb-4">
           <div className="w-full h-1.5 bg-white/15 rounded-full overflow-hidden">
             <motion.div
               className="h-full rounded-full"
-              style={{ background: "linear-gradient(90deg, #4ade80, #86efac)" }}
+              style={{ background: "linear-gradient(90deg, #ffd200, #fff1a8)" }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.1, ease: "linear" }}
             />
@@ -87,7 +87,7 @@ export default function LoadingPage({ progress = 0 }: { progress?: number }) {
           className="mt-10 flex items-center gap-2 px-5 py-2.5 rounded-full"
           style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}
         >
-          <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-yellow-300 animate-pulse" />
           <p className="text-white/60 text-xs font-semibold">Connexion SSL 256-bit</p>
         </motion.div>
       </div>

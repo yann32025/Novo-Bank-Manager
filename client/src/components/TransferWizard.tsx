@@ -34,7 +34,7 @@ export function TransferWizard() {
   const labelClass = "block text-[10px] font-black text-white/60 uppercase tracking-widest mb-1.5";
 
   return (
-    <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ background: "linear-gradient(160deg, #1a5c3a 0%, #0f3d27 100%)" }}>
+    <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ background: "linear-gradient(160deg, #202b78 0%, #111b55 100%)" }}>
       {/* Header */}
       <div className="px-5 pt-5 pb-4">
         <div className="flex items-center gap-3 mb-4">
@@ -97,7 +97,7 @@ export function TransferWizard() {
                 <label className={labelClass}>Motif (optionnel)</label>
                 <input type="text" value={form.motif} onChange={update("motif")} placeholder="ex : Loyer, Remboursement..." className={fieldClass} />
               </div>
-              <button type="submit" disabled={!form.beneficiary || !form.iban || !form.bic || !form.amount} className="w-full py-4 mt-2 rounded-xl font-black text-primary bg-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 text-sm">
+          <button type="submit" disabled={!form.beneficiary || !form.iban || !form.bic || !form.amount} className="w-full py-4 mt-2 rounded-xl font-black text-accent-foreground bg-accent shadow-lg hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 text-sm">
                 Vérifier le virement <ArrowRight className="w-4 h-4" />
               </button>
             </motion.form>
@@ -123,7 +123,7 @@ export function TransferWizard() {
                   </div>
                 ))}
               </div>
-              <button onClick={handleConfirm} disabled={createTransfer.isPending} className="w-full py-4 rounded-xl font-black text-primary bg-white shadow-lg hover:-translate-y-0.5 disabled:opacity-60 transition-all text-sm">
+                <button onClick={handleConfirm} disabled={createTransfer.isPending} className="w-full py-4 rounded-xl font-black text-accent-foreground bg-accent shadow-lg hover:-translate-y-0.5 disabled:opacity-60 transition-all text-sm">
                 {createTransfer.isPending ? "Enregistrement..." : "Confirmer le virement"}
               </button>
             </motion.div>
@@ -131,7 +131,7 @@ export function TransferWizard() {
 
           {step === "success" && (
             <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center py-8 space-y-4">
-              <CheckCircle2 className="w-20 h-20 text-green-300" />
+              <CheckCircle2 className="w-20 h-20 text-yellow-300" />
               <div>
                 <h3 className="text-white font-black text-xl">Virement enregistré</h3>
                 <p className="text-white/60 text-sm mt-1">Il sera traité après le déblocage de votre compte.</p>

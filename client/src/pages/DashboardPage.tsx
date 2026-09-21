@@ -19,7 +19,8 @@ import { TransferWizard } from "@/components/TransferWizard";
 type Tab = "accueil" | "comptes" | "virement" | "vous";
 type SubPage = null | "cadeaux" | "credits" | "assurances" | "epargne" | "profil";
 
-const LCL_GREEN = "#005b4f";
+const LCL_BLUE = "#202b78";
+const LCL_YELLOW = "#ffd200";
 const BANK_NAME = "LCL";
 const BANK_LOGO = "/assets/lcl-logo.webp";
 
@@ -134,7 +135,7 @@ export default function DashboardPage() {
         return (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="pb-28">
             {/* Dark card header */}
-            <div className="rounded-3xl overflow-hidden mb-5" style={{ background: "linear-gradient(160deg, #1a1a2e 0%, #111111 100%)" }}>
+            <div className="rounded-3xl overflow-hidden mb-5" style={{ background: "linear-gradient(160deg, #111b55 0%, #202b78 100%)" }}>
               <div className="flex items-center p-4 gap-2">
                 <button onClick={() => setSubPage(null)} className="p-1.5 hover:bg-white/10 rounded-full transition-colors">
                   <ArrowLeft className="w-5 h-5 text-white" />
@@ -161,7 +162,7 @@ export default function DashboardPage() {
                       if (u) updatePicture.mutate(u);
                     }}
                     className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center border-2 border-zinc-900"
-                    style={{ background: "#f59e0b" }}
+                    style={{ background: LCL_YELLOW }}
                   >
                     <Camera className="w-4 h-4 text-white" />
                   </button>
@@ -261,7 +262,7 @@ export default function DashboardPage() {
       case "credits":
         return (
           <SubPageLayout title="Crédits & Prêts" onBack={() => setSubPage(null)}>
-            <div className="rounded-3xl p-6 text-white" style={{ background: "linear-gradient(135deg, #1e3a6e 0%, #0d244a 100%)" }}>
+            <div className="rounded-3xl p-6 text-white" style={{ background: "linear-gradient(135deg, #3346a4 0%, #111b55 100%)" }}>
               <p className="text-blue-200 text-[10px] font-black uppercase tracking-widest mb-2">ENCOURS TOTAL</p>
               <p className="font-black text-4xl mb-1">0,00 €</p>
               <p className="text-blue-200 text-sm">Aucun crédit actif sur votre compte.</p>
@@ -319,10 +320,10 @@ export default function DashboardPage() {
       case "epargne":
         return (
           <SubPageLayout title="Épargne & Placements" onBack={() => setSubPage(null)}>
-            <div className="rounded-3xl p-6 text-white" style={{ background: "linear-gradient(135deg, #007a3d 0%, #005029 100%)" }}>
+            <div className="rounded-3xl p-6 text-white" style={{ background: "linear-gradient(135deg, #202b78 0%, #111b55 100%)" }}>
               <div className="flex items-center gap-3 mb-2">
                 <img src={BANK_LOGO} alt={BANK_NAME} className="w-10 h-10 object-contain rounded-lg" />
-                <p className="text-green-200 text-[10px] font-black uppercase tracking-widest">ÉPARGNE {BANK_NAME}</p>
+                <p className="text-blue-200 text-[10px] font-black uppercase tracking-widest">ÉPARGNE {BANK_NAME}</p>
               </div>
               <p className="font-black text-4xl">{fmt4(balance)}</p>
             </div>
@@ -367,8 +368,8 @@ export default function DashboardPage() {
             )}
 
             {/* Balance card */}
-            <div className="rounded-3xl p-5 text-white shadow-xl" style={{ background: "linear-gradient(135deg, #007a3d 0%, #005029 100%)" }}>
-              <p className="text-green-200 text-[10px] font-black uppercase tracking-widest mb-1">COMPTE COURANT BLOQUÉ</p>
+            <div className="rounded-3xl p-5 text-white shadow-xl" style={{ background: "linear-gradient(135deg, #202b78 0%, #111b55 100%)" }}>
+              <p className="text-blue-200 text-[10px] font-black uppercase tracking-widest mb-1">COMPTE COURANT BLOQUÉ</p>
               <div className="flex justify-between items-start">
                 <p className="font-black text-4xl">{fmt4(balance)}</p>
                 {account?.isBlocked && (
@@ -377,16 +378,16 @@ export default function DashboardPage() {
                   </span>
                 )}
               </div>
-              <p className="text-green-200 text-xs font-mono mt-2">{iban}</p>
+              <p className="text-blue-200 text-xs font-mono mt-2">{iban}</p>
             </div>
 
             {/* Offre LCL */}
-            <div className="rounded-3xl p-5 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg, #005029 0%, #007a3d 100%)" }}>
+            <div className="rounded-3xl p-5 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg, #111b55 0%, #202b78 100%)" }}>
               <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full blur-xl translate-x-8 -translate-y-8" />
-               <p className="text-green-300 text-[10px] font-black uppercase tracking-widest mb-1">OFFRE {BANK_NAME}</p>
+               <p className="text-yellow-300 text-[10px] font-black uppercase tracking-widest mb-1">OFFRE {BANK_NAME}</p>
               <h3 className="font-black text-xl mb-1">Crédit Immobilier</h3>
-               <p className="text-green-200 text-xs mb-4">Réalisez votre projet maison avec {BANK_NAME}</p>
-              <button onClick={() => goSub("credits")} className="bg-white text-primary font-black text-sm px-5 py-2.5 rounded-xl">Simuler</button>
+               <p className="text-blue-200 text-xs mb-4">Réalisez votre projet maison avec {BANK_NAME}</p>
+               <button onClick={() => goSub("credits")} className="bg-accent text-accent-foreground font-black text-sm px-5 py-2.5 rounded-xl">Simuler</button>
               <span className="absolute right-5 bottom-4 text-4xl">🏠</span>
             </div>
 
@@ -425,16 +426,16 @@ export default function DashboardPage() {
             </div>
 
             {/* VOTRE EXPERTISE — logo visible */}
-            <div className="rounded-3xl p-5 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg, #007a3d 0%, #005029 100%)" }}>
+            <div className="rounded-3xl p-5 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg, #202b78 0%, #111b55 100%)" }}>
                <img src={BANK_LOGO} alt={BANK_NAME} className="absolute right-4 bottom-4 w-14 h-14 object-contain opacity-60 rounded-xl" />
-              <p className="text-green-300 text-[10px] font-black uppercase tracking-widest mb-1">VOTRE EXPERTISE</p>
+              <p className="text-yellow-300 text-[10px] font-black uppercase tracking-widest mb-1">VOTRE EXPERTISE</p>
               <h3 className="font-black text-lg leading-tight max-w-[65%]">Un accompagnement sur mesure pour vos projets</h3>
               <button className="mt-4 bg-white/20 border border-white/30 text-white font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2">En savoir plus →</button>
             </div>
 
             {/* LCL Banner */}
             <div className="flex items-center gap-4 bg-card border border-border/50 rounded-2xl px-5 py-4 shadow-sm">
-              <div className="w-14 h-14 rounded-2xl shrink-0 flex items-center justify-center" style={{ background: LCL_GREEN }}>
+              <div className="w-14 h-14 rounded-2xl shrink-0 flex items-center justify-center" style={{ background: LCL_BLUE }}>
                 <img src={BANK_LOGO} alt={BANK_NAME} className="w-10 h-10 object-contain" />
               </div>
               <div>
@@ -466,7 +467,7 @@ export default function DashboardPage() {
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 pb-28">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: LCL_GREEN }}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: LCL_BLUE }}>
                 <img src={BANK_LOGO} alt={BANK_NAME} className="w-6 h-6 object-contain" />
               </div>
               <h3 className="font-black text-xl">Comptes & Cartes</h3>
@@ -507,7 +508,7 @@ export default function DashboardPage() {
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pb-28">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: LCL_GREEN }}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: LCL_BLUE }}>
                 <img src={BANK_LOGO} alt={BANK_NAME} className="w-6 h-6 object-contain" />
               </div>
               <h3 className="font-black text-xl">Virements & Paiements</h3>
@@ -519,8 +520,8 @@ export default function DashboardPage() {
       case "vous":
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pb-28 min-h-screen bg-white dark:bg-background">
-            {/* Profile header — green gradient */}
-            <div className="rounded-3xl overflow-hidden mb-6" style={{ background: "linear-gradient(160deg, #007a3d 0%, #005029 100%)" }}>
+            {/* Profile header — LCL blue gradient */}
+            <div className="rounded-3xl overflow-hidden mb-6" style={{ background: "linear-gradient(160deg, #111b55 0%, #202b78 100%)" }}>
               <div className="flex flex-col items-center pt-8 pb-8 px-4">
                 <div className="relative mb-4">
                   <div className="w-[88px] h-[88px] rounded-full flex items-center justify-center" style={{ background: "rgba(255,255,255,0.25)" }}>
@@ -528,20 +529,20 @@ export default function DashboardPage() {
                       {user.profilePicture
                         ? <img src={user.profilePicture} alt="" className="w-full h-full object-cover" />
                         : <div className="w-full h-full flex items-center justify-center">
-                            <span className="font-black text-3xl" style={{ color: LCL_GREEN }}>{user.fullName?.charAt(0) || "D"}</span>
+                            <span className="font-black text-3xl" style={{ color: LCL_YELLOW }}>{user.fullName?.charAt(0) || "D"}</span>
                           </div>
                       }
                     </div>
                   </div>
                   <button
                     onClick={() => { const u = prompt("URL de votre photo :"); if (u) updatePicture.mutate(u); }}
-                    className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-lg bg-amber-400"
+                     className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-lg bg-accent"
                   >
                     <Camera className="w-4 h-4 text-white" />
                   </button>
                 </div>
                 <p className="text-white font-black text-2xl">{user.fullName}</p>
-                <p className="text-green-200 text-sm mt-1">Identifiant : {user.username}</p>
+                <p className="text-blue-200 text-sm mt-1">Identifiant : {user.username}</p>
               </div>
             </div>
 
@@ -551,22 +552,22 @@ export default function DashboardPage() {
               <div className="space-y-2.5 mb-6">
                 {[
                   {
-                    icon: <ShieldCheck className="w-5 h-5" style={{ color: LCL_GREEN }} />,
-                    bg: "#e8f5ee",
+                    icon: <ShieldCheck className="w-5 h-5" style={{ color: LCL_BLUE }} />,
+                    bg: "#eef2ff",
                     label: "Sécurité du compte",
                     sub: "Mot de passe, Face ID",
                     action: () => setSecurityOpen(true),
                   },
                   {
-                    icon: <Bell className="w-5 h-5" style={{ color: LCL_GREEN }} />,
-                    bg: "#e8f5ee",
+                    icon: <Bell className="w-5 h-5" style={{ color: LCL_BLUE }} />,
+                    bg: "#eef2ff",
                     label: "Notifications",
                     sub: "Alertes et SMS",
                     action: () => setNotifOpen(true),
                   },
                   {
-                    icon: <HelpCircle className="w-5 h-5" style={{ color: LCL_GREEN }} />,
-                    bg: "#e8f5ee",
+                    icon: <HelpCircle className="w-5 h-5" style={{ color: LCL_BLUE }} />,
+                    bg: "#eef2ff",
                     label: "Aide & Support",
                     sub: "FAQ et contact",
                     action: () => setSupportOpen(true),
@@ -602,7 +603,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-secondary/30 dark:bg-background flex flex-col max-w-2xl mx-auto md:border-x border-border/50 relative">
 
       {/* GREEN HEADER */}
-      <header className="sticky top-0 z-30 px-4 py-3 flex justify-between items-center" style={{ background: LCL_GREEN }}>
+      <header className="sticky top-0 z-30 px-4 py-3 flex justify-between items-center" style={{ background: LCL_BLUE }}>
         <div className="flex items-center gap-2.5">
           <img src={BANK_LOGO} alt={BANK_NAME} className="w-9 h-9 object-contain rounded-lg" />
           <div>
@@ -709,7 +710,7 @@ export default function DashboardPage() {
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setHamburgerOpen(false)} className="fixed inset-0 bg-black/40 z-50" />
             <motion.div initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }} transition={{ type: "spring", damping: 25, stiffness: 220 }} className="fixed left-0 top-0 bottom-0 w-[82%] max-w-[300px] bg-card z-50 flex flex-col shadow-2xl overflow-y-auto">
-              <div className="px-5 py-4 flex justify-between items-start" style={{ background: LCL_GREEN }}>
+              <div className="px-5 py-4 flex justify-between items-start" style={{ background: LCL_BLUE }}>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-md">
                     <img src={BANK_LOGO} alt={BANK_NAME} className="w-7 h-7 object-contain" />
@@ -721,7 +722,7 @@ export default function DashboardPage() {
                 </div>
                 <button onClick={() => setHamburgerOpen(false)} className="p-1.5 hover:bg-white/20 rounded-full"><X className="w-5 h-5 text-white" /></button>
               </div>
-              <div className="mx-4 mt-4 p-4 bg-green-50 dark:bg-primary/10 rounded-2xl border border-primary/20">
+              <div className="mx-4 mt-4 p-4 bg-blue-50 dark:bg-primary/10 rounded-2xl border border-primary/20">
                 <p className="text-muted-foreground text-xs font-medium">Somme bloquée</p>
                 <p className="font-black text-xl text-primary mt-0.5">{fmt4(balance)}</p>
                 {account?.isBlocked && <p className="text-xs font-bold text-red-500 flex items-center gap-1 mt-1.5">🔒 Compte bloqué</p>}
@@ -750,7 +751,7 @@ export default function DashboardPage() {
                 <div className="space-y-0.5">
                   {[
                     { icon: <User className="w-5 h-5 text-primary" />, label: "Profil & Paramètres", action: () => goSub("profil") },
-                    { icon: <HelpCircle className="w-5 h-5 text-green-500" />, label: "Support & Aide", action: () => { setHamburgerOpen(false); setSupportOpen(true); } },
+                    { icon: <HelpCircle className="w-5 h-5 text-blue-600" />, label: "Support & Aide", action: () => { setHamburgerOpen(false); setSupportOpen(true); } },
                   ].map((item, i) => (
                     <button key={i} onClick={item.action} className="w-full flex items-center gap-3 px-3 py-3.5 rounded-xl hover:bg-secondary transition-colors text-left">
                       <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center shrink-0">{item.icon}</div>
@@ -776,7 +777,7 @@ export default function DashboardPage() {
         {securityOpen && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSecurityOpen(false)} className="fixed inset-0 bg-black/60 z-50" />
-            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 max-w-2xl mx-auto rounded-t-3xl z-50 p-5 shadow-2xl max-h-[75vh] overflow-y-auto" style={{ background: "#1c1c1e" }}>
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 max-w-2xl mx-auto rounded-t-3xl z-50 p-5 shadow-2xl max-h-[75vh] overflow-y-auto" style={{ background: "#111b55" }}>
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-primary" />
@@ -791,7 +792,7 @@ export default function DashboardPage() {
                   { icon: "📱", label: "Appareils connectés", sub: "Gérer vos sessions actives" },
                   { icon: "🛡️", label: "Double authentification", sub: "Sécurité renforcée par SMS" },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 px-4 py-4 rounded-2xl" style={{ background: "#2c2c2e" }}>
+                  <div key={i} className="flex items-center gap-4 px-4 py-4 rounded-2xl" style={{ background: "#202b78" }}>
                     <span className="text-2xl">{item.icon}</span>
                     <div className="flex-1">
                       <p className="text-white font-semibold text-sm">{item.label}</p>
@@ -825,10 +826,10 @@ export default function DashboardPage() {
                 <input type="text" placeholder="Rechercher une transaction..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} autoFocus className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary border border-border/50 outline-none text-sm focus:border-primary transition-colors" />
               </div>
               <div className="flex gap-2 mb-4">
-                <button onClick={() => setSearchTab("transactions")} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all ${searchTab === "transactions" ? "text-white shadow-sm" : "bg-secondary text-muted-foreground"}`} style={searchTab === "transactions" ? { background: LCL_GREEN } : {}}>
+                <button onClick={() => setSearchTab("transactions")} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all ${searchTab === "transactions" ? "text-white shadow-sm" : "bg-secondary text-muted-foreground"}`} style={searchTab === "transactions" ? { background: LCL_BLUE } : {}}>
                   <ArrowUpRight className="w-4 h-4" /> Transactions
                 </button>
-                <button onClick={() => setSearchTab("localisation")} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all ${searchTab === "localisation" ? "text-white shadow-sm" : "bg-secondary text-muted-foreground"}`} style={searchTab === "localisation" ? { background: LCL_GREEN } : {}}>
+                <button onClick={() => setSearchTab("localisation")} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all ${searchTab === "localisation" ? "text-white shadow-sm" : "bg-secondary text-muted-foreground"}`} style={searchTab === "localisation" ? { background: LCL_BLUE } : {}}>
                   <MapPin className="w-4 h-4" /> Localisation
                 </button>
               </div>
@@ -851,7 +852,7 @@ export default function DashboardPage() {
                 <div className="text-center py-8 space-y-3">
                   <MapPin className="w-10 h-10 text-muted-foreground mx-auto" />
                   <p className="text-muted-foreground text-sm">Localisation des agences {BANK_NAME}</p>
-                  <button className="px-5 py-2.5 text-white rounded-xl font-bold text-sm" style={{ background: LCL_GREEN }}>Activer la géolocalisation</button>
+                  <button className="px-5 py-2.5 text-accent-foreground rounded-xl font-bold text-sm bg-accent">Activer la géolocalisation</button>
                 </div>
               )}
             </motion.div>
@@ -884,18 +885,18 @@ export default function DashboardPage() {
               <AnimatePresence>
                 {chatActive && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="mb-5 overflow-hidden">
-                    <div className="flex items-center justify-between px-4 py-3 rounded-t-2xl" style={{ background: LCL_GREEN }}>
+                    <div className="flex items-center justify-between px-4 py-3 rounded-t-2xl" style={{ background: LCL_BLUE }}>
                       <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
+                        <span className="w-2 h-2 rounded-full bg-yellow-300 animate-pulse" />
                         <MessageCircle className="w-4 h-4 text-white" />
                         <p className="font-black text-white text-sm">Chat {BANK_NAME}</p>
                       </div>
-                      <p className="text-green-200 text-xs font-bold">Conseiller en ligne</p>
+                      <p className="text-blue-200 text-xs font-bold">Conseiller en ligne</p>
                     </div>
                     <div className="bg-secondary/50 border border-border/30 min-h-[180px] max-h-[220px] overflow-y-auto p-4 space-y-3">
                       {chatMessages.map((msg, i) => (
                         <div key={i} className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"}`}>
-                          <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm ${msg.from === "user" ? "text-white rounded-tr-sm" : "bg-card border border-border/50 text-foreground rounded-tl-sm"}`} style={msg.from === "user" ? { background: LCL_GREEN } : {}}>
+                          <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm ${msg.from === "user" ? "text-white rounded-tr-sm" : "bg-card border border-border/50 text-foreground rounded-tl-sm"}`} style={msg.from === "user" ? { background: LCL_BLUE } : {}}>
                             {msg.text}
                           </div>
                         </div>
@@ -904,7 +905,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex gap-2 border border-border/50 border-t-0 rounded-b-2xl bg-card p-3">
                       <input type="text" value={chatMsg} onChange={e => setChatMsg(e.target.value)} onKeyDown={e => e.key === "Enter" && sendChat()} placeholder="Écrivez votre message..." className="flex-1 bg-secondary rounded-xl px-3 py-2 text-sm outline-none" />
-                      <button onClick={sendChat} disabled={!chatMsg.trim()} className="w-10 h-10 rounded-xl flex items-center justify-center text-white disabled:opacity-40" style={{ background: LCL_GREEN }}>
+                      <button onClick={sendChat} disabled={!chatMsg.trim()} className="w-10 h-10 rounded-xl flex items-center justify-center text-accent-foreground disabled:opacity-40 bg-accent">
                         <SendHorizonal className="w-4 h-4" />
                       </button>
                     </div>
@@ -917,8 +918,8 @@ export default function DashboardPage() {
                   <p className="font-black text-sm">Marie Dupont</p>
                   <p className="text-muted-foreground text-xs mt-0.5">Conseillère patrimoniale — Agence Bordeaux Centre</p>
                   <div className="flex gap-2 mt-3">
-                    <button className="flex-1 py-2.5 text-white rounded-xl text-xs font-black" style={{ background: LCL_GREEN }}>Envoyer un message</button>
-                    <button className="flex-1 py-2.5 border-2 rounded-xl text-xs font-black text-primary" style={{ borderColor: LCL_GREEN }}>Prendre RDV</button>
+                    <button className="flex-1 py-2.5 text-accent-foreground rounded-xl text-xs font-black bg-accent">Envoyer un message</button>
+                    <button className="flex-1 py-2.5 border-2 rounded-xl text-xs font-black text-primary" style={{ borderColor: LCL_BLUE }}>Prendre RDV</button>
                   </div>
                 </div>
               </div>
