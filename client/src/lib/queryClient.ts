@@ -8,12 +8,25 @@ async function throwIfResNotOk(res: Response) {
 }
 const API_BASE_URL = "https://votre-repl-nom.replit.dev";
 
-
 export async function apiRequest(
-  method: string,
-  url: string,
-  data?: unknown | undefined,
-const res = await fetch(`${API_BASE_URL}${url}`, {
+method: string,
+url: string,
+data?: unknown | undefined,
+): Promise<Response> {
+const res = await fetch(url, {
+method,
+headers: data ? { "Content-Type": "application/json" } : {},
+body: data ? JSON.stringify(data) : undefined,
+});
+
+if (!res.ok) {
+const text = await res.text();
+throw new Error(text || res.statusText);
+}
+
+return res;
+}
+
   const res = await fetch(url, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
