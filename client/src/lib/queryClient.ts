@@ -12,7 +12,10 @@ method: string,
 url: string,
 data?: unknown | undefined,
 ): Promise<Response> {
-const res = await fetch(url, {
+const baseUrl = "https://novo-bank-manager-daniell3amour.replit.app";
+const fullUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
+const res = await fetch(fullUrl, {
+  
 method,
 headers: data ? { "Content-Type": "application/json" } : {},
 body: data ? JSON.stringify(data) : undefined,
