@@ -17,6 +17,7 @@ export function useUser() {
 
 export function useLogin() {
   const queryClient = useQueryClient();
+  const userQueryKey = [api.auth.me.path];
   return useMutation({
     mutationFn: async (data: z.infer<typeof api.auth.login.input>) => {
       const res = await fetch(api.auth.login.path, {
@@ -32,8 +33,13 @@ export function useLogin() {
       }
       return api.auth.login.responses[200].parse(await res.json());
     },
+    onMutate: async () => {
+      // Stop a still-pending anonymous /api/me request from overwriting
+      // the authenticated user after a successful login.
+      await queryClient.cancelQueries({ queryKey: userQueryKey });
+    },
     onSuccess: (user) => {
-      queryClient.setQueryData([api.auth.me.path], user);
+      queryClient.setQueryData(userQueryKey, user);
     },
   });
 }

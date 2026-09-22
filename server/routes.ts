@@ -117,7 +117,16 @@ export async function registerRoutes(
 
       // @ts-ignore
       req.session.userId = user.id;
-      
+
+      // Persist the session before responding so the dashboard's first
+      // authenticated request can never arrive before the login is stored.
+      await new Promise<void>((resolve, reject) => {
+        req.session.save((err: Error | null) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+
       res.json({
         id: user.id,
         username: user.username,
@@ -125,6 +134,7 @@ export async function registerRoutes(
         profilePicture: user.profilePicture
       });
     } catch (e) {
+      console.error("Login error:", e);
       res.status(400).json({ message: "Erreur de validation" });
     }
   });

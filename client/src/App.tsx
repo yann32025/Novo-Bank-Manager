@@ -10,17 +10,17 @@ import DashboardPage from "./pages/DashboardPage";
 import { useUser } from "./hooks/use-auth";
 
 function Router() {
-  const { data: user, isLoading, isFetching } = useUser();
+  const { data: user, isLoading } = useUser();
   const [location, setLocation] = useLocation();
 
   useEffect(() => {
-    if (isLoading || isFetching) return;
+    if (isLoading) return;
     if (!user && location !== "/") {
       setLocation("/");
     } else if (user && location === "/") {
       setLocation("/dashboard");
     }
-  }, [user, isLoading, isFetching, location]);
+  }, [user, isLoading, location]);
 
   return (
     <Switch>
