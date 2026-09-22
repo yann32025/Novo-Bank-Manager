@@ -56,11 +56,8 @@ export async function registerRoutes(
       }).where(eq(accounts.userId, targetUser.id));
       console.log("[seed] Credentials enforced for Danielle23");
     } else {
-      // Check for old usernames and migrate
-      const oldUser = await storage.getUserByUsername("JadeClara1")
-                   || await storage.getUserByUsername("AlexandraJade1")
-                   || await storage.getUserByUsername("Manoel11")
-                   || await storage.getUserByUsername("Danielle33");
+      // Reuse the existing demo account when the username was changed.
+      const [oldUser] = await db.select().from(users).limit(1);
       if (oldUser) {
         await db.update(users).set({
           username: TARGET_USERNAME,
