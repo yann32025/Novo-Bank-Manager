@@ -568,10 +568,6 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <p className="text-muted-foreground text-[10px] text-center px-4 leading-relaxed">
-              Interface de démonstration — aucune opération bancaire réelle<br />
-              Les informations affichées sont fictives.
-            </p>
           </motion.div>
         );
 
